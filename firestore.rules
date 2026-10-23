@@ -1,0 +1,177 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny Catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isCurrentUser(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        (request.auth.token.email == 'naleswarbordoloi7@gmail.com' && request.auth.token.email_verified == true) ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['id', 'email', 'fullName', 'role']) &&
+        data.id is string && isValidId(data.id) &&
+        data.email is string && data.email.size() <= 256 &&
+        data.fullName is string && data.fullName.size() <= 120 &&
+        data.role in ['FARMER', 'CHAMPION', 'BUYER', 'ADMIN'];
+    }
+
+    function isValidCluster(data) {
+      return data.keys().hasAll(['id', 'name', 'championId']) &&
+        data.id is string && isValidId(data.id) &&
+        data.name is string && data.name.size() <= 120 &&
+        data.championId is string && isValidId(data.championId);
+    }
+
+    function isValidBulkRequirement(data) {
+      return data.keys().hasAll(['id', 'clusterId', 'itemName', 'status']) &&
+        data.id is string && isValidId(data.id) &&
+        data.clusterId is string && isValidId(data.clusterId) &&
+        data.itemName is string && data.itemName.size() <= 120 &&
+        data.status in ['AGGREGATING', 'ORDER_PLACED', 'SHIPPED', 'DISTRIBUTED'];
+    }
+
+    function isValidMachinery(data) {
+      return data.keys().hasAll(['id', 'name', 'type', 'hourlyRateInr', 'available']) &&
+        data.id is string && isValidId(data.id) &&
+        data.name is string && data.name.size() <= 120 &&
+        data.type is string && data.type.size() <= 80 &&
+        data.hourlyRateInr is number && data.hourlyRateInr >= 0 &&
+        data.available is bool;
+    }
+
+    function isValidHarvestLot(data) {
+      return data.keys().hasAll(['id', 'clusterId', 'crop', 'quantityKg', 'minimumTargetPricePerKg', 'status']) &&
+        data.id is string && isValidId(data.id) &&
+        data.clusterId is string && isValidId(data.clusterId) &&
+        data.crop is string && data.crop.size() <= 80 &&
+        data.quantityKg is number && data.quantityKg > 0 &&
+        data.minimumTargetPricePerKg is number && data.minimumTargetPricePerKg > 0 &&
+        data.status in ['AVAILABLE', 'COMMITTED_TO_BUYER', 'HARVESTED_SOLD'];
+    }
+
+    function isValidTransaction(data) {
+      return data.keys().hasAll(['id', 'userId', 'amountInr']) &&
+        data.id is string && isValidId(data.id) &&
+        data.userId is string && isValidId(data.userId) &&
+        data.amountInr is number;
+    }
+
+    function isValidSoilRecord(data) {
+      return data.keys().hasAll(['id', 'farmerId', 'ph']) &&
+        data.id is string && isValidId(data.id) &&
+        data.farmerId is string && isValidId(data.farmerId) &&
+        data.ph is number && data.ph >= 0 && data.ph <= 14;
+    }
+
+    // 1. Users collection - PII protection
+    match /users/{userId} {
+      allow get: if isSignedIn() && (isCurrentUser(userId) || isAdmin());
+      allow list: if isAdmin();
+      allow create: if (isCurrentUser(userId) || isAdmin()) && isValidUser(incoming()) && (incoming().role != 'ADMIN' || isAdmin());
+      allow update: if (
+        (isCurrentUser(userId) || isAdmin()) &&
+        isValidUser(incoming()) &&
+        incoming().id == existing().id &&
+        (isAdmin() || incoming().role == existing().role)
+      );
+      allow delete: if isAdmin();
+    }
+
+    // 2. Virtual Clusters
+    match /clusters/{clusterId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidCluster(incoming()) && (incoming().championId == request.auth.uid || isAdmin());
+      allow update: if isSignedIn() && isValidCluster(incoming()) && (existing().championId == request.auth.uid || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // 3. Bulk Order Requirements
+    match /bulkRequirements/{reqId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidBulkRequirement(incoming());
+      allow update: if isSignedIn() && isValidBulkRequirement(incoming()) && (
+        isAdmin() ||
+        incoming().diff(existing()).affectedKeys().hasAny(['currentQuantity', 'farmerPledges', 'status'])
+      );
+      allow delete: if isAdmin();
+    }
+
+    // 4. Machinery Items
+    match /machinery/{machineryId} {
+      allow read: if true;
+      allow create: if isSignedIn() && isValidMachinery(incoming());
+      allow update: if isSignedIn() && isValidMachinery(incoming());
+      allow delete: if isAdmin();
+    }
+
+    // 5. Harvest Pool Lots
+    match /harvestLots/{lotId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isValidHarvestLot(incoming()) && (incoming().farmerId == request.auth.uid || isAdmin());
+      allow update: if isSignedIn() && isValidHarvestLot(incoming()) && (existing().farmerId == request.auth.uid || isAdmin());
+      allow delete: if isSignedIn() && (existing().farmerId == request.auth.uid || isAdmin());
+    }
+
+    // 6. Transactions
+    match /transactions/{txId} {
+      allow get: if isSignedIn() && (existing().userId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() && isValidTransaction(incoming()) && (incoming().userId == request.auth.uid || isAdmin());
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // 7. Soil Records
+    match /soilRecords/{recordId} {
+      allow get: if isSignedIn() && (existing().farmerId == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (resource.data.farmerId == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() && isValidSoilRecord(incoming()) && (incoming().farmerId == request.auth.uid || isAdmin());
+      allow update: if isSignedIn() && isValidSoilRecord(incoming()) && (existing().farmerId == request.auth.uid || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // 8. Shared Cluster Carts
+    match /sharedCarts/{cartId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn();
+      allow delete: if isAdmin();
+    }
+
+    // Admin whitelist collection
+    match /admins/{adminId} {
+      allow read, write: if isAdmin();
+    }
+
+    // Connection test doc
+    match /test/connection {
+      allow read: if true;
+    }
+  }
+}

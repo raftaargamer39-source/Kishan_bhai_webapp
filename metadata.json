@@ -1,0 +1,6 @@
+{
+  "name": "Kishan Bhai",
+  "description": "Your AI Farming Partner — From Seed to Sale. AI-powered digital agriculture platform for crop health, smart irrigation, mandi intelligence, and virtual farm clusters.",
+  "requestFramePermissions": ["camera", "microphone", "geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

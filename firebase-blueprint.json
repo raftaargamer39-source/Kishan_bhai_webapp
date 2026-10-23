@@ -1,0 +1,505 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Registered farmer, champion, buyer or admin member profile",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique user identifier",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "email": {
+          "type": "string",
+          "description": "User email address",
+          "maxLength": 256
+        },
+        "fullName": {
+          "type": "string",
+          "description": "User display or legal name",
+          "maxLength": 120
+        },
+        "phone": {
+          "type": "string",
+          "description": "Contact phone number",
+          "maxLength": 30
+        },
+        "role": {
+          "type": "string",
+          "description": "Access control role",
+          "enum": ["FARMER", "CHAMPION", "BUYER", "ADMIN"]
+        },
+        "village": {
+          "type": "string",
+          "description": "Primary village or panchayat",
+          "maxLength": 100
+        },
+        "state": {
+          "type": "string",
+          "description": "Indian state or region",
+          "maxLength": 80
+        },
+        "verified": {
+          "type": "boolean",
+          "description": "Whether user identity and KYC are confirmed"
+        },
+        "farmSizeAcres": {
+          "type": "number",
+          "description": "Size of cultivated land in acres"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of account creation",
+          "maxLength": 64
+        }
+      },
+      "required": ["id", "email", "fullName", "role"]
+    },
+    "VirtualCluster": {
+      "title": "VirtualCluster",
+      "description": "Collaborative farming cluster aggregation",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Cluster identifier",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Cluster title",
+          "maxLength": 120
+        },
+        "village": {
+          "type": "string",
+          "description": "Center village",
+          "maxLength": 100
+        },
+        "state": {
+          "type": "string",
+          "description": "State name",
+          "maxLength": 80
+        },
+        "championId": {
+          "type": "string",
+          "description": "Managing Lead Champion User ID",
+          "maxLength": 128
+        },
+        "championName": {
+          "type": "string",
+          "description": "Champion full name",
+          "maxLength": 120
+        },
+        "description": {
+          "type": "string",
+          "description": "Cluster purpose and scope",
+          "maxLength": 1000
+        },
+        "totalAcres": {
+          "type": "number",
+          "description": "Aggregated land acreage"
+        },
+        "memberCount": {
+          "type": "number",
+          "description": "Active farmer count"
+        },
+        "collectiveHarvestKg": {
+          "type": "number",
+          "description": "Total harvested output in kg"
+        },
+        "bulkSavingsPercent": {
+          "type": "number",
+          "description": "Estimated input cost savings"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp",
+          "maxLength": 64
+        }
+      },
+      "required": ["id", "name", "championId"]
+    },
+    "BulkOrderRequirement": {
+      "title": "BulkOrderRequirement",
+      "description": "Collective input procurement demand",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Bulk requirement ID",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "clusterId": {
+          "type": "string",
+          "description": "Target cluster ID",
+          "maxLength": 128
+        },
+        "clusterName": {
+          "type": "string",
+          "description": "Target cluster name",
+          "maxLength": 120
+        },
+        "category": {
+          "type": "string",
+          "description": "Category of input",
+          "maxLength": 80
+        },
+        "itemName": {
+          "type": "string",
+          "description": "Item product name",
+          "maxLength": 120
+        },
+        "targetQuantity": {
+          "type": "number",
+          "description": "Target bulk order quantity"
+        },
+        "currentQuantity": {
+          "type": "number",
+          "description": "Current quantity aggregated"
+        },
+        "unit": {
+          "type": "string",
+          "description": "Measurement unit",
+          "maxLength": 50
+        },
+        "standardRetailPrice": {
+          "type": "number",
+          "description": "Standard market retail rate"
+        },
+        "negotiatedBulkPrice": {
+          "type": "number",
+          "description": "Wholesale pooled rate"
+        },
+        "savingsPercentage": {
+          "type": "number",
+          "description": "Percentage savings"
+        },
+        "status": {
+          "type": "string",
+          "description": "Fulfillment status",
+          "enum": ["AGGREGATING", "ORDER_PLACED", "SHIPPED", "DISTRIBUTED"]
+        },
+        "deadlineDate": {
+          "type": "string",
+          "description": "Aggregation cutoff date",
+          "maxLength": 64
+        }
+      },
+      "required": ["id", "clusterId", "itemName", "status"]
+    },
+    "MachineryItem": {
+      "title": "MachineryItem",
+      "description": "Shared equipment and tractor rental listing",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Machinery equipment ID",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Machine title or model",
+          "maxLength": 120
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of equipment",
+          "maxLength": 80
+        },
+        "modelYear": {
+          "type": "string",
+          "description": "Manufacturing year",
+          "maxLength": 20
+        },
+        "hpOrCapacity": {
+          "type": "string",
+          "description": "Horsepower or capacity specs",
+          "maxLength": 80
+        },
+        "hourlyRateInr": {
+          "type": "number",
+          "description": "Rental price per hour in INR"
+        },
+        "available": {
+          "type": "boolean",
+          "description": "Whether machine is ready for booking"
+        },
+        "currentLocationVillage": {
+          "type": "string",
+          "description": "Location village",
+          "maxLength": 100
+        },
+        "ownerContact": {
+          "type": "string",
+          "description": "Contact details of owner or hub",
+          "maxLength": 100
+        },
+        "description": {
+          "type": "string",
+          "description": "Operational notes and attachments",
+          "maxLength": 1000
+        }
+      },
+      "required": ["id", "name", "type", "hourlyRateInr", "available"]
+    },
+    "HarvestPoolLot": {
+      "title": "HarvestPoolLot",
+      "description": "Pooled harvest produce available for buyers",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Produce lot ID",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "clusterId": {
+          "type": "string",
+          "description": "Origin cluster ID",
+          "maxLength": 128
+        },
+        "clusterName": {
+          "type": "string",
+          "description": "Origin cluster title",
+          "maxLength": 120
+        },
+        "farmerId": {
+          "type": "string",
+          "description": "Farmer or pool lead ID",
+          "maxLength": 128
+        },
+        "farmerName": {
+          "type": "string",
+          "description": "Farmer name",
+          "maxLength": 120
+        },
+        "village": {
+          "type": "string",
+          "description": "Produce source village",
+          "maxLength": 100
+        },
+        "crop": {
+          "type": "string",
+          "description": "Crop name",
+          "maxLength": 80
+        },
+        "variety": {
+          "type": "string",
+          "description": "Seed variety",
+          "maxLength": 80
+        },
+        "quantityKg": {
+          "type": "number",
+          "description": "Total weight in kg"
+        },
+        "qualityGrade": {
+          "type": "string",
+          "description": "Produce grade certification",
+          "maxLength": 80
+        },
+        "minimumTargetPricePerKg": {
+          "type": "number",
+          "description": "Floor price in INR per kg"
+        },
+        "status": {
+          "type": "string",
+          "description": "Lot market status",
+          "enum": ["AVAILABLE", "COMMITTED_TO_BUYER", "HARVESTED_SOLD"]
+        },
+        "expectedHarvestDate": {
+          "type": "string",
+          "description": "Harvest or availability date",
+          "maxLength": 64
+        }
+      },
+      "required": ["id", "clusterId", "crop", "quantityKg", "minimumTargetPricePerKg", "status"]
+    },
+    "TransactionRecord": {
+      "title": "TransactionRecord",
+      "description": "Farm economic transaction or ledger event",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Transaction identifier",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "userId": {
+          "type": "string",
+          "description": "User account ID",
+          "maxLength": 128
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of financial or supply transaction",
+          "maxLength": 50
+        },
+        "amountInr": {
+          "type": "number",
+          "description": "Transaction value in INR"
+        },
+        "status": {
+          "type": "string",
+          "description": "Processing status",
+          "maxLength": 50
+        },
+        "title": {
+          "type": "string",
+          "description": "Transaction summary title",
+          "maxLength": 200
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp of transaction",
+          "maxLength": 64
+        }
+      },
+      "required": ["id", "userId", "amountInr"]
+    },
+    "SoilRecord": {
+      "title": "SoilRecord",
+      "description": "Laboratory or sensor soil testing measurement record",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Soil record ID",
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "farmerId": {
+          "type": "string",
+          "description": "Farmer profile ID",
+          "maxLength": 128
+        },
+        "date": {
+          "type": "string",
+          "description": "Date of sampling",
+          "maxLength": 64
+        },
+        "ph": {
+          "type": "number",
+          "description": "Soil pH level"
+        },
+        "nitrogenKgHa": {
+          "type": "number",
+          "description": "Available Nitrogen (kg/ha)"
+        },
+        "phosphorusKgHa": {
+          "type": "number",
+          "description": "Available Phosphorus (kg/ha)"
+        },
+        "potassiumKgHa": {
+          "type": "number",
+          "description": "Available Potassium (kg/ha)"
+        },
+        "organicCarbonPercent": {
+          "type": "number",
+          "description": "Organic carbon percentage"
+        }
+      },
+      "required": ["id", "farmerId", "ph"]
+    },
+    "SharedClusterCart": {
+      "title": "SharedClusterCart",
+      "description": "Collective shopping cart for farming clusters before group checkout",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique cart identifier",
+          "maxLength": 128
+        },
+        "clusterId": {
+          "type": "string",
+          "description": "Identifier of the cluster owning this cart",
+          "maxLength": 128
+        },
+        "clusterName": {
+          "type": "string",
+          "description": "Cluster display name",
+          "maxLength": 120
+        },
+        "village": {
+          "type": "string",
+          "description": "Village or panchayat hub",
+          "maxLength": 100
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the shared order",
+          "maxLength": 150
+        },
+        "status": {
+          "type": "string",
+          "description": "Cart status",
+          "enum": ["OPEN", "LOCKED", "ORDER_PLACED", "DELIVERED"]
+        },
+        "deliveryAddress": {
+          "type": "string",
+          "description": "Bulk delivery destination",
+          "maxLength": 255
+        },
+        "coordinatorName": {
+          "type": "string",
+          "description": "Cluster coordinator name",
+          "maxLength": 120
+        },
+        "totalRetailAmount": {
+          "type": "number",
+          "description": "Aggregated standard retail value"
+        },
+        "totalWholesaleAmount": {
+          "type": "number",
+          "description": "Negotiated bulk wholesale value"
+        },
+        "totalSavings": {
+          "type": "number",
+          "description": "Net cluster savings in INR"
+        }
+      },
+      "required": ["id", "clusterId", "status", "title"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Farmer and user directory profiles"
+    },
+    "/clusters/{clusterId}": {
+      "schema": "VirtualCluster",
+      "description": "Virtual farming clusters and collective land data"
+    },
+    "/bulkRequirements/{reqId}": {
+      "schema": "BulkOrderRequirement",
+      "description": "Aggregated group input demand orders"
+    },
+    "/sharedCarts/{cartId}": {
+      "schema": "SharedClusterCart",
+      "description": "Collective cluster shopping carts and checkout splits"
+    },
+    "/machinery/{machineryId}": {
+      "schema": "MachineryItem",
+      "description": "Shared machinery catalog and booking status"
+    },
+    "/harvestLots/{lotId}": {
+      "schema": "HarvestPoolLot",
+      "description": "Aggregated harvest lots available for buyers"
+    },
+    "/transactions/{txId}": {
+      "schema": "TransactionRecord",
+      "description": "Farm economic ledger transactions"
+    },
+    "/soilRecords/{recordId}": {
+      "schema": "SoilRecord",
+      "description": "Soil health card and test historical data"
+    }
+  }
+}

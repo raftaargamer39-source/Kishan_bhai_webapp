@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-display: 'Fraunces', Georgia, serif;
+}
+
+@layer base {
+  :root {
+    --bg-canvas: #FAF8F5;
+    --surface-card: #FFFFFF;
+    --color-emerald-primary: #144633;
+    --color-emerald-hover: #0F3627;
+    --color-harvest-gold: #D97706;
+    --color-harvest-light: #FEF3C7;
+  }
+
+  body {
+    background-color: #FAF8F5;
+    min-height: 100vh;
+    color: #1A2421;
+    letter-spacing: -0.01em;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .dark body {
+    background-color: #111714;
+    color: #F2F5F3;
+  }
+
+  /* Re-enable selection for inputs and textareas */
+  input, textarea, [contenteditable="true"] {
+    user-select: auto;
+  }
+
+  #root {
+    min-height: 100vh;
+    background: #FAF8F5;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dark #root {
+    background: #111714;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-display {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #144633;
+  }
+
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6, .dark .font-display {
+    color: #ECFDF5;
+    font-weight: 700;
+  }
+
+  p {
+    max-width: 75ch;
+  }
+}
+
+/* Smooth custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Subtle focus rings for accessibility */
+*:focus-visible {
+  outline: 2px solid #16A34A;
+  outline-offset: 2px;
+}
+
+/* Custom card hover elevation */
+.hover-card-elevate {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover-card-elevate:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(22, 163, 74, 0.1);
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-shimmer {
+  animation: shimmer 2.2s infinite;
+}
+
+
+
