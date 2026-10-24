@@ -1328,10 +1328,58 @@ export async function executeMockApiFallback(
     };
   }
 
+  if (pathname === '/api/farmer/rewards' || pathname === '/api/loyalty/profile') {
+    return {
+      ok: true,
+      status: 200,
+      data: {
+        success: true,
+        farmerName: 'Ramesh Patel',
+        totalPoints: 570,
+        currentLevel: 'GOLD',
+        levelBadge: 'Gold Producer',
+        nextLevel: 'PLATINUM',
+        pointsToNextLevel: 930,
+        progressPercent: 38,
+        unlockedBenefits: [
+          '5% Priority Discount on Collective Orders',
+          'Free Expert Soil Consultation Voucher',
+          'Access eligible bulk-selling clusters',
+          'Detailed loyalty progress analytics',
+        ],
+        trustScore: {
+          isVerified: true,
+          completedTransactions: 12,
+          successfulDeliveries: 12,
+          verifiedRating: 4.9,
+          qualityComplianceRate: 98,
+          trustScoreOutOf100: 96,
+        },
+        recentLedger: [
+          {
+            id: 'led-1',
+            activityType: 'HARVEST_DELIVERED',
+            pointsChange: 150,
+            description: 'Organic Wheat Lot #W-204 Delivered & Verified',
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: 'led-2',
+            activityType: 'EARLY_ORDER_PARTICIPATION',
+            pointsChange: 50,
+            description: 'Cluster DAP Fertilizer Group Buying Participation',
+            createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+          },
+        ],
+      },
+    };
+  }
+
   // Default fallback for any unmatched endpoint
   return {
     ok: true,
     status: 200,
     data: { success: true, message: 'Simulated response from Kishan Bhai client engine.', path: pathname },
   };
+
 }

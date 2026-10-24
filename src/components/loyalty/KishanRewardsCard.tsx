@@ -59,7 +59,7 @@ export const KishanRewardsCard: React.FC<KishanRewardsCardProps> = ({
     fetch('/api/farmer/rewards')
       .then((res) => res.json())
       .then((data) => {
-        if (data.success) {
+        if (data?.success && data?.trustScore) {
           setProfile(data);
         }
       })
@@ -72,6 +72,8 @@ export const KishanRewardsCard: React.FC<KishanRewardsCardProps> = ({
   const nextLevel = profile?.nextLevel ?? 'PLATINUM';
   const pointsToNextLevel = profile?.pointsToNextLevel ?? 930;
   const progressPercent = profile?.progressPercent ?? 7;
+  const trustScoreValue = profile?.trustScore?.trustScoreOutOf100 ?? 96;
+
 
   const levelColor =
     currentLevel === 'DIAMOND'
@@ -126,7 +128,7 @@ export const KishanRewardsCard: React.FC<KishanRewardsCardProps> = ({
           <div className="text-left">
             <span className="text-[10px] text-stone-400 block leading-none">Farmer Trust Score</span>
             <span className="text-xs font-black text-emerald-300">
-              {profile?.trustScore.trustScoreOutOf100 ?? 96}/100 • 100% Verified
+              {trustScoreValue}/100 • 100% Verified
             </span>
           </div>
         </div>
