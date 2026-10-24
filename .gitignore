@@ -24,4 +24,5 @@ dev-dist
 .env.*.local
 *.log
 powershell.cmd
+bun.lock
 
