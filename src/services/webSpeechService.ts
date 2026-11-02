@@ -404,7 +404,8 @@ export function speakText(
   }
 
   const utterance = new SpeechSynthesisUtterance(clean);
-  const targetLang = options.lang || 'en-IN';
+  const hasDevanagari = /[\u0900-\u097F]/.test(clean);
+  const targetLang = hasDevanagari ? 'hi-IN' : options.lang || 'en-IN';
 
   // Pair with best matching voice installed on user's system
   const matchedVoice = findBestVoiceForLanguage(targetLang);
