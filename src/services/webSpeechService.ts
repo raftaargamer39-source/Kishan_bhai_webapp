@@ -404,8 +404,19 @@ export function speakText(
   }
 
   const utterance = new SpeechSynthesisUtterance(clean);
-  const hasDevanagari = /[\u0900-\u097F]/.test(clean);
-  const targetLang = hasDevanagari ? 'hi-IN' : options.lang || 'en-IN';
+  let targetLang = options.lang || '';
+  if (!targetLang || targetLang === 'en' || targetLang === 'en-IN') {
+    if (/[\u0A00-\u0A7F]/.test(clean)) targetLang = 'pa-IN';
+    else if (/[\u0A80-\u0AFF]/.test(clean)) targetLang = 'gu-IN';
+    else if (/[\u0980-\u09FF]/.test(clean)) targetLang = 'bn-IN';
+    else if (/[\u0C00-\u0C7F]/.test(clean)) targetLang = 'te-IN';
+    else if (/[\u0B80-\u0BFF]/.test(clean)) targetLang = 'ta-IN';
+    else if (/[\u0C80-\u0CFF]/.test(clean)) targetLang = 'kn-IN';
+    else if (/[\u0D00-\u0D7F]/.test(clean)) targetLang = 'ml-IN';
+    else if (/[\u0B00-\u0B7F]/.test(clean)) targetLang = 'or-IN';
+    else if (/[\u0900-\u097F]/.test(clean)) targetLang = 'hi-IN';
+    else targetLang = 'en-IN';
+  }
 
   // Pair with best matching voice installed on user's system
   const matchedVoice = findBestVoiceForLanguage(targetLang);

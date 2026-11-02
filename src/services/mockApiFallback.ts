@@ -20,6 +20,7 @@ import {
   UserProfile,
   VirtualCluster,
 } from '../../shared/types.js';
+import { normalizeLang, generateUniversalResponse } from './proVoiceKnowledgeBase.js';
 import {
   INITIAL_CROPS,
   INITIAL_IRRIGATION_STATUS,
@@ -883,11 +884,97 @@ export async function executeMockApiFallback(
   if (pathname === '/api/ai/chat' || pathname === '/api/ai/voice') {
     const { prompt, cropContext, imageBase64, language } = body || {};
     const query = prompt || 'How is my crop health?';
-    const lang = language || 'en';
-
-    const isHindi = lang === 'hi' || query.toLowerCase().includes('pani') || query.toLowerCase().includes('sinchai') || query.toLowerCase().includes('fasal');
-
+    const normLang = normalizeLang(language);
     const lower = query.toLowerCase();
+
+    // If the user selected a regional Indian language (gu, pa, mr, bn, te, ta, kn, ml, or, as),
+    // strictly answer in that chosen language.
+    if (normLang !== 'hi' && normLang !== 'en') {
+      const localizedText = generateUniversalResponse(query, normLang, {
+        soilMoisture: 42,
+        rainChance: 70,
+        crops: cropContext,
+      });
+      return {
+        ok: true,
+        status: 200,
+        data: {
+          text: localizedText,
+          modelUsed: 'gemini-2.5-flash (Resilient Offline Hybrid)',
+          language: normLang,
+          sources: [
+            'IMD Agro-Meteorological Radar',
+            'ICAR Crop Knowledge Network',
+            'Agmarknet Live Mandi Data',
+            'Kishan Bhai Soil IoT Sensors',
+          ],
+          farmingActionCard: {
+            title: 'Irrigation & Canopy Management',
+            crop: cropContext || 'Cotton (Bt Shankar-6)',
+            recommendedTime: 'Morning 07:00 AM',
+            reason: 'Balanced soil moisture and weather forecast align for optimal nutrient uptake.',
+            actionType: 'IRRIGATION',
+            actionLabel: 'View Smart Irrigation',
+            actionView: 'smart-irrigation',
+          },
+        },
+      };
+    }
+
+    // Handle Google Assistant general knowledge topics (Identity, Math conversions, Science, Dairy, etc.)
+    if (
+      lower.includes('who are you') ||
+      lower.includes('what can you do') ||
+      lower.includes('tum kaun ho') ||
+      lower.includes('help me') ||
+      lower === 'hello' ||
+      lower === 'hi' ||
+      lower === 'namaste' ||
+      lower === 'नमस्ते' ||
+      lower.includes('acre') ||
+      lower.includes('bigha') ||
+      lower.includes('hectare') ||
+      lower.includes('guntha') ||
+      lower.includes('quintal') ||
+      lower.includes('kilo') ||
+      lower.includes('maund') ||
+      lower.includes('mann') ||
+      lower.includes('photosynthesis') ||
+      lower.includes('solar') ||
+      lower.includes('water cycle') ||
+      lower.includes('science') ||
+      lower.includes('cow') ||
+      lower.includes('buffalo') ||
+      lower.includes('milk') ||
+      lower.includes('dairy') ||
+      lower.includes('pashu') ||
+      lower.includes('gai') ||
+      lower.includes('bhains') ||
+      lower.includes('dudh')
+    ) {
+      const text = generateUniversalResponse(query, normLang, {
+        soilMoisture: 42,
+        rainChance: 70,
+        crops: cropContext,
+      });
+      return {
+        ok: true,
+        status: 200,
+        data: {
+          text,
+          modelUsed: 'gemini-2.5-flash (Resilient Offline Hybrid)',
+          language: normLang,
+          sources: [
+            'IMD Agro-Meteorological Radar',
+            'ICAR Crop Knowledge Network',
+            'Agmarknet Live Mandi Data',
+            'Kishan Bhai Soil IoT Sensors',
+          ],
+        },
+      };
+    }
+
+    const isHindi = normLang === 'hi';
     let text = '';
 
     if (lower.includes('tomato') || lower.includes('tamatar')) {
@@ -921,9 +1008,11 @@ export async function executeMockApiFallback(
         ? `🌱 **Recommendation: पत्तियों पर अल्टरनेरिया फफूंद व सूक्ष्म पोषक तत्वों की कमी पाई गई है**\n\n**Why? (कारण):**\n- 78% आर्द्रता और बादल छाए रहने से फफूंद का प्रसार तेजी से होता है।\n- पत्तियों की नसों के बीच पीलापन मैग्नीशियम की कमी दर्शाता है।\n\n**What to do (क्या करें):**\n1. **मेंकोजेब 75% WP @ 2.5 ग्राम/लीटर** का छिड़काव करें।\n2. इसके साथ **1% मैग्नीशियम सल्फेट** का घोल मिलाकर स्प्रे करें।\n3. छिड़काव सुबह खिली धूप के समय करें।\n\n⚠️ **Important Warning:** बारिश के 4 घंटे के भीतर छिड़काव न करें।`
         : `🌱 **Recommendation: Alternaria Leaf Spot & Magnesium Deficiency Detected**\n\n**Why?**\n- High ambient humidity (78%) accelerates fungal spore proliferation.\n- Interveinal chlorosis indicates vegetative nutrient depletion during boll/pod formation.\n\n**What to do:**\n1. Apply foliar spray of **Mancozeb 75% WP @ 2.5g/L**.\n2. Mix **1% Magnesium Sulphate (MgSO4)** in tank mix.\n3. Spray during morning sunshine hours with a fine hollow-cone nozzle.\n\n⚠️ **Important Warning:** Never spray within 4 hours of rainfall. Use protective gloves.`;
     } else {
-      text = isHindi
-        ? `🌱 **सलाह: आपके प्रश्न "${query}" पर कृषि विशेषज्ञ परामर्श**\n\n**कारण (Why?):**\n- मौसम और मिट्टी की वर्तमान अवस्था (नमी 42%, तापमान 29.5°C) के अनुसार सही प्रबंधन से पैदावार बढ़ती है।\n\n**क्या करें (What to do):**\n1. खेत में फसल का नियमित निरीक्षण करें।\n2. संतुलित पोषक तत्व व अनुमोदित जैविक या रासायनिक उपचार अपनाएं।\n3. किसान भाई ऐप में 'रोग पहचान' व 'मृदा स्वास्थ्य' का लाभ लें।\n\n⚠️ **Important Warning:** रसायनों का प्रयोग करते समय अनुशंसित मात्रा का पालन करें।`
-        : `🌱 **Recommendation: Agronomic Advisory for "${query}"**\n\n**Why?**\n- Field conditions (Soil Moisture 42%, Temp 29.5°C) provide favorable growth conditions when managed with timely inputs.\n\n**What to do:**\n1. Scout field canopy and root zone regularly for early symptoms.\n2. Follow prescribed nutrient schedules and integrated pest management.\n3. Check the Disease Scanner and Soil Health card on your dashboard for diagnostic reports.\n\n⚠️ **Important Warning:** Always follow certified dilution ratios and safety precautions.`;
+      text = generateUniversalResponse(query, normLang, {
+        soilMoisture: 42,
+        rainChance: 70,
+        crops: cropContext,
+      });
     }
 
     return {

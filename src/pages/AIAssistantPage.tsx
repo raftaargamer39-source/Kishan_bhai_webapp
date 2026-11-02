@@ -255,16 +255,21 @@ export const AIAssistantPage: React.FC = () => {
     });
   };
 
-  const handleSend = async (customPrompt?: string, customImage?: string): Promise<string | undefined> => {
+  const handleSend = async (
+    customPrompt?: string,
+    customImage?: string,
+    customLang?: string
+  ): Promise<string | undefined> => {
     const promptToSend = customPrompt || inputPrompt;
     const imageToSend = customImage || selectedImage;
+    const activeLang = customLang || speechLanguageCode || language;
 
     if (!promptToSend.trim() && !imageToSend) return undefined;
 
     const userMsg: AIChatMessage = {
       id: `msg_${Date.now()}`,
       role: 'user',
-      content: promptToSend || (language === 'hi' ? 'कृपया इस फसल की जांच करें।' : 'Please analyze this crop leaf photo.'),
+      content: promptToSend || (activeLang.startsWith('hi') ? 'कृपया इस फसल की जांच करें।' : 'Please analyze this crop leaf photo.'),
       imageUrl: imageToSend || undefined,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
@@ -303,7 +308,7 @@ export const AIAssistantPage: React.FC = () => {
           imageBase64: base64Data,
           userId: currentUser?.id,
           modelName: selectedModel,
-          language,
+          language: activeLang,
           farmContext,
           conversationId: activeSessionId,
         }),
@@ -389,7 +394,7 @@ export const AIAssistantPage: React.FC = () => {
       if (autoSpeakAnswer && aiData.text) {
         setIsAudioSpeaking(true);
         speakText(aiData.text, {
-          lang: speechLanguageCode,
+          lang: activeLang,
           onEnd: () => setIsAudioSpeaking(false),
           onError: () => setIsAudioSpeaking(false),
         });
@@ -397,7 +402,7 @@ export const AIAssistantPage: React.FC = () => {
 
       return aiData.text;
     } catch (err: any) {
-      const errMsg = language === 'hi'
+      const errMsg = activeLang.startsWith('hi')
         ? 'क्षमा करें, कनेक्शन में रुकावट आई है। कृपया दोबारा प्रयास करें।'
         : 'I experienced a connection issue. Please verify your connection and try again.';
       setMessages((prev) => [
@@ -710,8 +715,8 @@ export const AIAssistantPage: React.FC = () => {
             <FieldVoiceBar
               isOpen={isFieldVoiceBarOpen}
               onToggleOpen={() => setIsFieldVoiceBarOpen(false)}
-              onSendQuery={async (query) => {
-                await handleSend(query);
+              onSendQuery={async (query, dialect) => {
+                await handleSend(query, undefined, dialect || speechLanguageCode);
               }}
               onSaveDiaryNote={handleSaveVoiceDiaryNote}
               language={language}
@@ -846,12 +851,12 @@ export const AIAssistantPage: React.FC = () => {
       <HandsFreeAssistantModal
         isOpen={isHandsFreeOpen}
         onClose={() => setIsHandsFreeOpen(false)}
-        language={language}
+        language={speechLanguageCode.split('-')[0] || language}
         farmerName={currentUser?.fullName || 'Farmer Brother'}
         crops={currentUser?.crops || ['BT Cotton', 'Sharbati Wheat']}
         village={currentUser?.village || 'Anandpur'}
-        onSendQuery={async (query) => {
-          const res = await handleSend(query);
+        onSendQuery={async (query, modalLang) => {
+          const res = await handleSend(query, undefined, modalLang || speechLanguageCode);
           return res || 'Processed your farm query.';
         }}
       />

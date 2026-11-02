@@ -37,7 +37,7 @@ export type FieldVoiceMode = 'query' | 'note';
 interface FieldVoiceBarProps {
   isOpen: boolean;
   onToggleOpen: () => void;
-  onSendQuery: (query: string) => Promise<void | string | undefined>;
+  onSendQuery: (query: string, dialect?: string) => Promise<void | string | undefined>;
   onSaveDiaryNote: (note: {
     category: string;
     crop: string;
@@ -232,7 +232,7 @@ export const FieldVoiceBar: React.FC<FieldVoiceBarProps> = ({
     stopListening();
     playChime('save');
 
-    await onSendQuery(textToSend);
+    await onSendQuery(textToSend, selectedDialect);
     setSpeechText('');
     setParsedNote(null);
   };

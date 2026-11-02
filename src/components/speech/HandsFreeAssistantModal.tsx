@@ -31,7 +31,7 @@ import { AIChatMessage } from '../../../shared/types';
 interface HandsFreeAssistantModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSendQuery: (prompt: string) => Promise<string | undefined>;
+  onSendQuery: (prompt: string, langCode?: string) => Promise<string | undefined>;
   language: string;
   farmerName?: string;
   crops?: string[];
@@ -125,7 +125,7 @@ export const HandsFreeAssistantModal: React.FC<HandsFreeAssistantModalProps> = (
     stopListening();
 
     try {
-      const answer = await onSendQuery(queryText);
+      const answer = await onSendQuery(queryText, selectedVoiceLang);
       const cleanAnswer = answer || 'I have analyzed your farm data. Please check the recommendations on screen.';
       setLatestAnswer(cleanAnswer);
 

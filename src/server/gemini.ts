@@ -7,6 +7,7 @@
 import { GoogleGenAI, FunctionDeclaration, Type, GenerateContentResponse } from '@google/genai';
 import { db } from './db.js';
 import { FarmingActionCard, DiseaseAnalysisResult } from '../../shared/types.js';
+import { normalizeLang, generateUniversalResponse } from '../services/proVoiceKnowledgeBase.js';
 
 let aiInstance: GoogleGenAI | null = null;
 
@@ -407,7 +408,20 @@ IMPORTANT INSTRUCTIONS:
    2. ...
    3. ...
    ⚠️ **Important Warning:** ...
-2. If language requested is Hindi ('hi'), write in clean, fluent Hindi (Devanagari). If other Indian languages (pa, gu, mr, bn, ta, te, kn, ml, or, as), reply in that language or English with respectful terminology.
+2. STRICT LANGUAGE MANDATE: You MUST answer EXCLUSIVELY and 100% in the user's selected language: "${language}".
+   - If Gujarati ('gu' or 'gu-IN'): Write 100% in Gujarati script (ગુજરાતી).
+   - If Punjabi ('pa' or 'pa-IN'): Write 100% in Gurmukhi Punjabi script (ਪੰਜਾਬੀ).
+   - If Marathi ('mr' or 'mr-IN'): Write 100% in Marathi (मराठी).
+   - If Bengali ('bn' or 'bn-IN'): Write 100% in Bengali script (বাংলা).
+   - If Telugu ('te' or 'te-IN'): Write 100% in Telugu script (తెలుగు).
+   - If Tamil ('ta' or 'ta-IN'): Write 100% in Tamil script (தமிழ்).
+   - If Kannada ('kn' or 'kn-IN'): Write 100% in Kannada script (ಕನ್ನಡ).
+   - If Malayalam ('ml' or 'ml-IN'): Write 100% in Malayalam script (മലയാളം).
+   - If Odia ('or' or 'or-IN'): Write 100% in Odia script (ଓଡ଼ିଆ).
+   - If Assamese ('as' or 'as-IN'): Write 100% in Assamese script (অসমীয়া).
+   - If Hindi ('hi' or 'hi-IN'): Write 100% in Hindi Devanagari (हिन्दी).
+   - If English ('en' or 'en-IN'): Write in English.
+   NEVER answer in English if the user selected any Indian regional language! The farmer will hear your answer spoken in this language.
 3. If farmer asks to change profile/add crop/book machinery/pool harvest/bulk order, invoke the appropriate tool.`;
 
     contents.push({ text: contextHeader });
@@ -890,17 +904,50 @@ function generateSmartStructuredAdvice(
   rainChance: number,
   crops: string
 ): string {
+  const normLang = normalizeLang(language);
   const lower = prompt.toLowerCase();
-  const isHindi =
-    language === 'hi' ||
-    lower.includes('hindi') ||
-    lower.includes('pani') ||
-    lower.includes('sinchai') ||
-    lower.includes('kaise') ||
-    lower.includes('kya') ||
-    lower.includes('khad') ||
-    lower.includes('dawa') ||
-    lower.includes('fasal');
+
+  // If the user selected a regional Indian language (gu, pa, mr, bn, te, ta, kn, ml, or, as),
+  // strictly answer in that chosen language.
+  if (normLang !== 'hi' && normLang !== 'en') {
+    return generateUniversalResponse(prompt, normLang, { soilMoisture, rainChance, crops });
+  }
+
+  // Handle Google Assistant general knowledge topics (Identity, Math conversions, Science, Dairy, etc.)
+  if (
+    lower.includes('who are you') ||
+    lower.includes('what can you do') ||
+    lower.includes('tum kaun ho') ||
+    lower.includes('help me') ||
+    lower === 'hello' ||
+    lower === 'hi' ||
+    lower === 'namaste' ||
+    lower === 'नमस्ते' ||
+    lower.includes('acre') ||
+    lower.includes('bigha') ||
+    lower.includes('hectare') ||
+    lower.includes('guntha') ||
+    lower.includes('quintal') ||
+    lower.includes('kilo') ||
+    lower.includes('maund') ||
+    lower.includes('mann') ||
+    lower.includes('photosynthesis') ||
+    lower.includes('solar') ||
+    lower.includes('water cycle') ||
+    lower.includes('science') ||
+    lower.includes('cow') ||
+    lower.includes('buffalo') ||
+    lower.includes('milk') ||
+    lower.includes('dairy') ||
+    lower.includes('pashu') ||
+    lower.includes('gai') ||
+    lower.includes('bhains') ||
+    lower.includes('dudh')
+  ) {
+    return generateUniversalResponse(prompt, normLang, { soilMoisture, rainChance, crops });
+  }
+
+  const isHindi = normLang === 'hi';
 
   // GREETINGS & ASSISTANT IDENTITY
   if (
@@ -1421,32 +1468,8 @@ function generateSmartStructuredAdvice(
 ⚠️ **Important Warning:** Do not pay unauthorized agents; all official scheme enrollments are handled free through official DBT portals.`;
   }
 
-  // DYNAMIC INTELLIGENT FALLBACK (Addressing specific question terms)
-  if (isHindi) {
-    return `🌱 **सलाह: आपके प्रश्न "${prompt}" के संबंध में कृषि विशेषज्ञ परामर्श**
-
-**कारण (Why?):**
-- फसल की अधिकतम पैदावार के लिए मौसम, मिट्टी की नमी (${soilMoisture}%) और फसल की वर्तमान अवस्था के अनुसार समय पर सही कदम उठाना आवश्यक है।
-
-**क्या करें (What to do):**
-1. **पौधों का निरीक्षण**: खेत में पत्तियों, तनों और फूलों का ध्यानपूर्वक निरीक्षण करें।
-2. **संतुलित पोषण व सुरक्षा**: आवश्यकतानुसार उचित खाद, सिंचाई या जैविक कीटनाशक का प्रयोग प्रमाणित कृषि वैज्ञानिक की सलाह से करें।
-3. **डिजिटल कृषि सुविधाएं**: अपने किसान भाई ऐप में **रोग पहचान स्कैनर** या **मृदा स्वास्थ्य कार्ड** का उपयोग करके सटीक रिपोर्ट प्राप्त करें।
-
-⚠️ **महत्वपूर्ण चेतावनी:** रसायनों का प्रयोग करते समय सही खुराक और सुरक्षा सावधानियों का हमेशा पालन करें।`;
-  }
-
-  return `🌱 **Recommendation: Expert Advisory for "${prompt}"**
-
-**Why?**
-- Maximizing crop yield requires timely intervention aligned with current soil moisture (${soilMoisture}%) and local agro-climatic conditions.
-
-**What to do:**
-1. **Field Inspection**: Regularly check root-zone moisture and scout lower foliage for early signs of nutrient deficiency or pests.
-2. **Balanced Intervention**: Apply fertilizers, irrigation, or bio-treatments strictly according to recommended dosages.
-3. **Diagnostic Tools**: Use the Kishan Bhai **Disease Scanner** or **Soil Health Portal** to generate tailored lab-grade reports.
-
-⚠️ **Important Warning:** Always adhere to recommended chemical safety intervals and application dosages.`;
+  // DYNAMIC INTELLIGENT FALLBACK (Guarantees language consistency)
+  return generateUniversalResponse(prompt, normLang, { soilMoisture, rainChance, crops });
 }
 
 /**
