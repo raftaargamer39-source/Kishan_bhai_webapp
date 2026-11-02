@@ -73,9 +73,7 @@ export async function generateWithModelFallback(
         continue;
       }
 
-      if (i === modelsToTry.length - 1) {
-        break;
-      }
+      break;
     }
   }
   throw lastError;
@@ -931,6 +929,14 @@ function generateSmartStructuredAdvice(
     lower.includes('kilo') ||
     lower.includes('maund') ||
     lower.includes('mann') ||
+    lower.includes('एकड़') ||
+    lower.includes('एकर') ||
+    lower.includes('बीघा') ||
+    lower.includes('हेक्टेयर') ||
+    lower.includes('गुंठा') ||
+    lower.includes('क्विंटल') ||
+    lower.includes('किलो') ||
+    lower.includes('मन') ||
     lower.includes('photosynthesis') ||
     lower.includes('solar') ||
     lower.includes('water cycle') ||
@@ -942,7 +948,11 @@ function generateSmartStructuredAdvice(
     lower.includes('pashu') ||
     lower.includes('gai') ||
     lower.includes('bhains') ||
-    lower.includes('dudh')
+    lower.includes('dudh') ||
+    lower.includes('गाय') ||
+    lower.includes('भैंस') ||
+    lower.includes('दूध') ||
+    lower.includes('पशु')
   ) {
     return generateUniversalResponse(prompt, normLang, { soilMoisture, rainChance, crops });
   }
@@ -1049,7 +1059,7 @@ function generateSmartStructuredAdvice(
   }
 
   // POTATO: TUBER ENLARGEMENT, FERTILIZER & BLIGHT
-  if (lower.includes('potato') || lower.includes('aalu') || lower.includes('aloo')) {
+  if (lower.includes('potato') || lower.includes('aalu') || lower.includes('aloo') || lower.includes('आलू') || lower.includes('बटाटा')) {
     if (isHindi) {
       return `🌱 **सलाह: आलू की फसल में कंद (Tuber) का आकार बढ़ाने व झुलसा रोग से बचाव**
 
@@ -1080,7 +1090,7 @@ function generateSmartStructuredAdvice(
   }
 
   // ONION & GARLIC: BULB SIZING, THRIPS & PURPLE BLOTCH
-  if (lower.includes('onion') || lower.includes('pyaj') || lower.includes('pyaaz') || lower.includes('garlic') || lower.includes('lahsun')) {
+  if (lower.includes('onion') || lower.includes('pyaj') || lower.includes('pyaaz') || lower.includes('प्याज') || lower.includes('garlic') || lower.includes('lahsun') || lower.includes('लहसुन')) {
     if (isHindi) {
       return `🌱 **सलाह: प्याज व लहसुन में कंद विकास, थ्रिप्स (पीलापन) व बैंगनी धब्बा रोग का समाधान**
 
@@ -1111,7 +1121,7 @@ function generateSmartStructuredAdvice(
   }
 
   // CHILLI / CAPSICUM: LEAF CURL, THRIPS & DIEBACK
-  if (lower.includes('chilli') || lower.includes('chili') || lower.includes('mirch') || lower.includes('capsicum')) {
+  if (lower.includes('chilli') || lower.includes('chili') || lower.includes('mirch') || lower.includes('मिर्च') || lower.includes('capsicum')) {
     if (isHindi) {
       return `🌱 **सलाह: मिर्च में पत्ता मरोड़ (मुर्दा रोग), थ्रिप्स व फूल झड़ने की समस्या का हल**
 
@@ -1142,7 +1152,7 @@ function generateSmartStructuredAdvice(
   }
 
   // WHEAT: RUST, IRRIGATION & NUTRIENTS
-  if (lower.includes('wheat') || lower.includes('gehu') || lower.includes('gehoon')) {
+  if (lower.includes('wheat') || lower.includes('gehu') || lower.includes('gehoon') || lower.includes('गेहूं') || lower.includes('गेंहू')) {
     if (isHindi) {
       return `🌱 **सलाह: गेहूँ की फसल में सिंचाई की क्रांतिक अवस्थाएं, पीला रतुआ व खाद प्रबंधन**
 
@@ -1173,7 +1183,7 @@ function generateSmartStructuredAdvice(
   }
 
   // COTTON: BOLLWORM, WHITEFLY, FERTILIZERS
-  if (lower.includes('cotton') || lower.includes('kapas') || lower.includes('narma')) {
+  if (lower.includes('cotton') || lower.includes('kapas') || lower.includes('narma') || lower.includes('कपास') || lower.includes('नरमा')) {
     if (isHindi) {
       return `🌱 **सलाह: कपास में गुलाबी सुंडी, सफेद मक्खी व लाल पत्ती रोग की रोकथाम**
 
@@ -1204,7 +1214,7 @@ function generateSmartStructuredAdvice(
   }
 
   // PADDY / RICE: STEM BORER, KHAIRA, FERTILIZERS
-  if (lower.includes('paddy') || lower.includes('rice') || lower.includes('dhaan') || lower.includes('dhan')) {
+  if (lower.includes('paddy') || lower.includes('rice') || lower.includes('dhaan') || lower.includes('dhan') || lower.includes('धान') || lower.includes('चावल')) {
     if (isHindi) {
       return `🌱 **सलाह: धान की फसल में तना छेदक, खैरा रोग व उर्वरक प्रबंधन**
 
@@ -1235,7 +1245,7 @@ function generateSmartStructuredAdvice(
   }
 
   // MUSTARD / OILSEEDS: APHIDS, SULPHUR
-  if (lower.includes('mustard') || lower.includes('sarson') || lower.includes('sarson')) {
+  if (lower.includes('mustard') || lower.includes('sarson') || lower.includes('सरसों') || lower.includes('राई')) {
     if (isHindi) {
       return `🌱 **सलाह: सरसों में चेपा (माहू) कीट नियंत्रण व तेल प्रतिशत बढ़ाने का उपाय**
 
@@ -1269,13 +1279,20 @@ function generateSmartStructuredAdvice(
   if (
     lower.includes('fertilizer') ||
     lower.includes('khad') ||
+    lower.includes('खाद') ||
+    lower.includes('उर्वरक') ||
     lower.includes('urea') ||
+    lower.includes('यूरिया') ||
     lower.includes('dap') ||
+    lower.includes('डीएपी') ||
     lower.includes('npk') ||
+    lower.includes('एनपीके') ||
     lower.includes('organic') ||
     lower.includes('vermicompost') ||
+    lower.includes('वर्मीकंपोस्ट') ||
     lower.includes('jeevamrut') ||
-    lower.includes('gobar')
+    lower.includes('gobar') ||
+    lower.includes('गोबर')
   ) {
     if (isHindi) {
       return `🌱 **सलाह: संतुलित रासायनिक व जैविक खाद (Fertilizer) प्रबंधन**
@@ -1311,12 +1328,16 @@ function generateSmartStructuredAdvice(
     lower.includes('pest') ||
     lower.includes('insect') ||
     lower.includes('keeda') ||
-    lower.includes('keede') ||
+    lower.includes('कीड़ा') ||
+    lower.includes('कीड़े') ||
+    lower.includes('कीटनाशक') ||
     lower.includes('whitefly') ||
     lower.includes('aphid') ||
     lower.includes('borer') ||
     lower.includes('caterpillar') ||
     lower.includes('sundi') ||
+    lower.includes('सुंडी') ||
+    lower.includes('इल्ली') ||
     lower.includes('kida')
   ) {
     if (isHindi) {
@@ -1347,7 +1368,7 @@ function generateSmartStructuredAdvice(
   }
 
   // SOIL HEALTH, TESTING & pH
-  if (lower.includes('soil') || lower.includes('mitti') || lower.includes('ph') || lower.includes('testing') || lower.includes('khad')) {
+  if (lower.includes('soil') || lower.includes('mitti') || lower.includes('मिट्टी') || lower.includes('ph') || lower.includes('testing') || lower.includes('जांच')) {
     if (isHindi) {
       return `🌱 **सलाह: मिट्टी की जांच, आदर्श pH मान व क्षारीय/अम्लीय भूमि का सुधार**
 
@@ -1377,8 +1398,124 @@ function generateSmartStructuredAdvice(
 ⚠️ **Important Warning:** Never collect soil samples within 30 days of chemical fertilizer application.`;
   }
 
+  // CONVERSATIONAL GREETINGS & GRATITUDE
+  if (
+    lower.includes('thank') ||
+    lower.includes('dhanyawad') ||
+    lower.includes('shukriya') ||
+    lower.includes('धन्यवाद') ||
+    lower.includes('शुक्रिया') ||
+    lower.includes('आभार') ||
+    lower.includes('प्रणाम') ||
+    lower.includes('राम राम') ||
+    lower.includes('kya haal') ||
+    lower.includes('how are you') ||
+    lower.includes('good morning') ||
+    lower.includes('good evening') ||
+    lower.includes('shubh') ||
+    lower.includes('alvida') ||
+    lower.includes('bye')
+  ) {
+    if (isHindi) {
+      return `🌱 **नमस्ते किसान भाई! आपका बहुत-बहुत धन्यवाद।**
+
+**मैं सदैव आपकी सेवा में तत्पर हूँ:**
+- मैं आपके खेत का डिजिटल साथी और कृषि सलाहकार हूँ।
+- जब भी फसल, खाद, बीमारी, मौसम, मंडी भाव या खेती से जुड़ा कोई भी सवाल हो, आप बिना हिचकिचाए मुझसे पूछ सकते हैं।
+
+**आप क्या कर सकते हैं:**
+1. जब भी कोई शंका हो, नीचे दिए गए माइक बटन पर टैप करके सीधे बोलें।
+2. फसल में कोई बीमारी दिखे तो रोग पहचान स्कैनर से पत्ती का फोटो भेजें।
+3. आपके सभी कार्य सफलतापूर्वक संपन्न हों, आपकी फसल हरी-भरी और पैदावार भरपूर रहे!
+
+⚠️ **सलाह:** खेती में हमेशा सही समय पर सही सलाह लेना ही सफलता की कुंजी है। शुभ दिन!`;
+    }
+
+    return `🌱 **Namaste Farmer Friend! You are most welcome.**
+
+**Always Here at Your Service:**
+- I am your personal 24/7 digital agronomy partner and farm assistant.
+- Whenever you have questions regarding crops, fertilizers, pest diseases, weather forecasts, or market prices, feel free to ask anytime.
+
+**What you can do:**
+1. Tap the microphone icon anytime to ask your query hands-free.
+2. Snap photos of symptomatic crop leaves using our Disease Scanner.
+3. Wishing you a bountiful harvest and thriving farm operations!
+
+⚠️ **Note:** Precision timing and prompt scientific action are the true secrets to maximum farm profitability. Have a great day!`;
+  }
+
+  // GENERAL KNOWLEDGE, SCIENCE & FACTUAL TRIVIA (सामान्य ज्ञान व विज्ञान)
+  if (
+    lower.includes('capital') ||
+    lower.includes('rajdhani') ||
+    lower.includes('राजधानी') ||
+    lower.includes('pradhan mantri') ||
+    lower.includes('प्रधानमंत्री') ||
+    lower.includes('president') ||
+    lower.includes('rashtrapati') ||
+    lower.includes('राष्ट्रपति') ||
+    lower.includes('dharti') ||
+    lower.includes('earth') ||
+    lower.includes('धरती') ||
+    lower.includes('पृथ्वी') ||
+    lower.includes('suraj') ||
+    lower.includes('sun') ||
+    lower.includes('सूरज') ||
+    lower.includes('सूर्य') ||
+    lower.includes('chand') ||
+    lower.includes('moon') ||
+    lower.includes('चांद') ||
+    lower.includes('चन्द्रमा') ||
+    lower.includes('चंद्रमा') ||
+    lower.includes('water formula') ||
+    lower.includes('रासायनिक सूत्र') ||
+    lower.includes('सूत्र') ||
+    lower.includes('formula') ||
+    lower.includes('h2o') ||
+    lower.includes('speed of light') ||
+    lower.includes('gravity') ||
+    lower.includes('gurutva') ||
+    lower.includes('गुरुत्वाकर्षण') ||
+    lower.includes('science') ||
+    lower.includes('vigyan') ||
+    lower.includes('विज्ञान')
+  ) {
+    if (isHindi) {
+      return `🌱 **ज्ञान दर्शन: सामान्य ज्ञान व विज्ञान संबंधी उत्तर**
+
+**तथ्य एवं वैज्ञानिक विश्लेषण:**
+- **भारत की राजधानी**: नई दिल्ली (New Delhi)।
+- **भारत के प्रधानमंत्री**: श्री नरेंद्र मोदी।
+- **पृथ्वी (Dharti)**: सूर्य से तीसरा ग्रह है। यह अपनी धुरी पर 24 घंटे में एक चक्कर पूरा करती है (जिससे दिन-रात होते हैं) और 365¼ दिन में सूर्य की परिक्रमा करती है (जिससे ऋतुएं बदलती हैं)।
+- **पानी का रासायनिक सूत्र**: **H₂O** (2 भाग हाइड्रोजन और 1 भाग ऑक्सीजन)।
+- **सूर्य और प्रकाश संश्लेषण**: सूर्य पूर्व दिशा से उगता है और पौधे सूर्य की रोशनी, पानी और कार्बन डाइऑक्साइड से अपना भोजन (ग्लूकोज) बनाते हैं।
+
+**किसान भाई के लिए महत्व:**
+1. विज्ञान के इन नियमों को समझकर मौसम चक्र, सिंचाई समय और फसल प्रकाश व्यवस्था को बेहतर किया जा सकता है।
+2. दैनिक सामान्य ज्ञान और स्कूली शिक्षा के सवालों में भी आप मुझसे निसंकोच पूछ सकते हैं।
+
+⚠️ **सूचना:** मैं खेती के साथ-साथ एक प्रो AI असिस्टेंट की तरह सामान्य ज्ञान व वैज्ञानिक प्रश्नों के भी उत्तर दे सकता हूँ।`;
+    }
+
+    return `🌱 **General Knowledge & Science Insights**
+
+**Factual Analysis:**
+- **Capital of India**: New Delhi.
+- **Prime Minister of India**: Shri Narendra Modi.
+- **Planet Earth**: The third planet from the Sun, rotating on its axis once every 24 hours (day/night cycle) and orbiting the Sun in 365.25 days (creating agricultural seasons).
+- **Chemical Formula of Water**: **H₂O** (Two hydrogen atoms covalently bonded to one oxygen atom).
+- **Photosynthesis Mechanism**: Green chloroplasts harness solar photons, water, and CO₂ to produce glucose and oxygen.
+
+**Relevance to Modern Farming:**
+1. Understanding underlying biophysical laws empowers farmers to optimize light interception and transpiration efficiency.
+2. Ask me any factual, scientific, or mathematical inquiry anytime.
+
+⚠️ **Note:** I function both as an agronomy expert and a general knowledge AI assistant for all household queries.`;
+  }
+
   // IRRIGATION QUESTION
-  if (lower.includes('water') || lower.includes('irrigate') || lower.includes('pani') || lower.includes('sinchai')) {
+  if (lower.includes('water') || lower.includes('irrigate') || lower.includes('pani') || lower.includes('पानी') || lower.includes('सिंचाई') || lower.includes('sinchai')) {
     if (isHindi) {
       return `🌱 **सलाह: फसल में सिंचाई और जल प्रबंधन दिशा-निर्देश**
 
@@ -1409,7 +1546,7 @@ function generateSmartStructuredAdvice(
   }
 
   // MANDI / MARKET / SELLING
-  if (lower.includes('sell') || lower.includes('mandi') || lower.includes('bhav') || lower.includes('market') || lower.includes('price') || lower.includes('msp')) {
+  if (lower.includes('sell') || lower.includes('mandi') || lower.includes('bhav') || lower.includes('market') || lower.includes('price') || lower.includes('msp') || lower.includes('मंडी') || lower.includes('भाव') || lower.includes('दाम') || lower.includes('बिक्री')) {
     if (isHindi) {
       return `🌱 **सलाह: APMC मंडी में उच्चतम भाव प्राप्त करने और अनाज बेचने की रणनीति**
 
@@ -1438,7 +1575,7 @@ function generateSmartStructuredAdvice(
   }
 
   // GOVERNMENT SCHEMES & SUBSIDIES
-  if (lower.includes('scheme') || lower.includes('yojana') || lower.includes('subsidy') || lower.includes('sarkar') || lower.includes('kisan credit')) {
+  if (lower.includes('scheme') || lower.includes('yojana') || lower.includes('subsidy') || lower.includes('sarkar') || lower.includes('kisan credit') || lower.includes('योजना') || lower.includes('सब्सिडी') || lower.includes('अनुदान') || lower.includes('सरकारी') || lower.includes('केसीसी')) {
     if (isHindi) {
       return `🌱 **सलाह: प्रमुख सरकारी कृषि योजनाएं, अनुदान व आवेदन प्रक्रिया**
 
@@ -1467,6 +1604,414 @@ function generateSmartStructuredAdvice(
 
 ⚠️ **Important Warning:** Do not pay unauthorized agents; all official scheme enrollments are handled free through official DBT portals.`;
   }
+
+  // WEATHER, RAIN FORECAST, FROST & HEATWAVE
+  if (
+    lower.includes('weather') ||
+    lower.includes('mausam') ||
+    lower.includes('barish') ||
+    lower.includes('rain') ||
+    lower.includes('pala') ||
+    lower.includes('frost') ||
+    lower.includes('heat') ||
+    lower.includes('tapman') ||
+    lower.includes('badal') ||
+    lower.includes('toofan') ||
+    lower.includes('hawa')
+  ) {
+    if (isHindi) {
+      return `🌱 **सलाह: मौसम का सटीक पूर्वानुमान, बारिश व पाला (पाला/ठंड) से फसल सुरक्षा**
+
+**मौसम की स्थिति (Why?):**
+- वर्तमान लाइव टेलीमेट्री: मिट्टी में नमी **${soilMoisture}% (अनुकूल)** है और आगामी 24 घंटे में वर्षा की संभावना **${rainChance}%** दर्ज है।
+- सर्दियों में जब तापमान 4°C से नीचे जाता है और हवा बंद होती है, तो पाला (Frost) पड़ने से पौधों की कोशिकाएं फट जाती हैं और पत्तियां काली पड़ जाती हैं।
+
+**क्या करें (What to do):**
+1. **आगामी बारिश के लिए**: यदि बारिश की संभावना 50% से अधिक हो तो सिंचाई और कीटनाशक छिड़काव तुरंत रोक दें।
+2. **पाला (ठंड) से बचाव के उपाय**:
+   - शाम के समय खेत में हल्की सिंचाई (स्प्रिंकलर या ड्रिप) करें; नम मिट्टी का तापमान सूखा रहने की तुलना में 2-3°C अधिक रहता है।
+   - पाला पड़ने की आशंका होने पर घुलनशील **गंधक (सल्फर 80% WDG) @ 2 ग्राम/लीटर** का छिड़काव करें या 0.1% सल्फ्यूरिक एसिड का स्प्रे करें।
+   - उत्तर-पश्चिम दिशा में शाम के समय खेत की मेड़ों पर कचरा जलाकर धुआं करें।
+3. **गर्मियों में लू (Heatwave) से बचाव**: दोपहर की तेज धूप से पहले सुबह-सुबह हल्की सिंचाई करें।
+
+⚠️ **चेतावनी:** भारी बारिश की चेतावनी होने पर खेत के जल निकासी (Drainage) रास्तों को पहले से खोलकर साफ रखें।`;
+    }
+
+    return `🌱 **Recommendation: Precision Micro-Weather & Frost/Precipitation Risk Management**
+
+**Why?**
+- Field telemetry reports current soil moisture at **${soilMoisture}%** with a **${rainChance}% precipitation probability** over the next 24 hours.
+- Night temperatures dropping below 4°C under calm skies trigger radiant frost, causing cellular fluid freezing and foliar necrosis.
+
+**What to do:**
+1. **Precipitation Safeguards**: Suspend all irrigation and foliar pesticide applications if rainfall probability exceeds 50%.
+2. **Frost Protection Protocol**:
+   - Provide light evening irrigation; wet soil retains and radiates significantly more latent heat than dry ground.
+   - Foliar spray **Sulphur 80% WDG @ 2g/L** or 0.1% dilute sulfuric acid to elevate plant cell sap concentration.
+   - Create evening smoke screens on the upwind borders (North-West) to trap long-wave ground radiation.
+3. **Heatwave Mitigation**: Employ early morning misting cycles during high-temperature spells.
+
+⚠️ **Important Warning:** Keep perimeter drainage trenches unobstructed to prevent waterlogging during torrential downpours.`;
+  }
+
+  // WEED CONTROL & HERBICIDES (खरपतवार नियंत्रण)
+  if (
+    lower.includes('weed') ||
+    lower.includes('kharpatwar') ||
+    lower.includes('ghaas') ||
+    lower.includes('grass') ||
+    lower.includes('herbicide') ||
+    lower.includes('nidaai') ||
+    lower.includes('gudai') ||
+    lower.includes('pendimethalin') ||
+    lower.includes('2,4-d') ||
+    lower.includes('roundup') ||
+    lower.includes('glyphosate')
+  ) {
+    if (isHindi) {
+      return `🌱 **सलाह: फसलों में खरपतवार (घास/कचरा) का वैज्ञानिक व सुरक्षित नियंत्रण**
+
+**कारण (Why?):**
+- बुवाई के शुरुआती 20 से 45 दिनों तक खरपतवार मुख्य फसल से खाद, पानी, धूप और हवा छीन लेते हैं, जिससे 30-50% तक उपज घट जाती है।
+
+**क्या करें (What to do):**
+1. **बुवाई के तुरंत बाद (प्री-इमर्जेंस)**: बुवाई के 48 घंटे के भीतर पर्याप्त नमी में **पेंडीमेथालिन 30% EC @ 1 से 1.25 लीटर प्रति एकड़** का 200 लीटर पानी में छिड़काव करें।
+2. **उगने के बाद चौड़ी व संकरी पत्ती वाले खरपतवार**:
+   - **गेहूं में**: गुल्ली डंडा (मंडूसी) के लिए **क्लोडिनाफॉप 15% WP @ 160 ग्राम/एकड़** और बथुआ आदि के लिए **2,4-D अमाइन साल्ट 58% SL @ 400 मिली/एकड़** (बुवाई के 30-35 दिन पर)।
+   - **सोयाबीन/दालों में**: **इमाजेथापायर 10% SL @ 300 मिली/एकड़** का 20-25 दिन की अवस्था पर छिड़काव करें।
+   - **प्याज/लहसुन में**: **ऑक्सीफ्लोरफेन 23.5% EC @ 1 मिली/लीटर**।
+3. **गैर-फसल मेड़ों पर**: खाली जगह पर खरपतवार नष्ट करने के लिए **ग्लाइफोसेट 41% SL @ 10-12 मिली/लीटर** का प्रयोग करें (केवल खाली मेड़ों पर, फसल पर नहीं)।
+
+⚠️ **चेतावनी:** खरपतवारनाशी का छिड़काव करते समय हमेशा 'फ्लैट फैन' या 'फ्लड जेट' नोजल का ही प्रयोग करें और हवा चलने की विपरीत दिशा में न चलें।`;
+    }
+
+    return `🌱 **Recommendation: Integrated Weed Management (IWM) & Herbicide Program**
+
+**Why?**
+- Unchecked weed competition during the critical crop-weed window (first 20–45 days) robs up to 45% of soil moisture and nutrients.
+
+**What to do:**
+1. **Pre-Emergence Foundation**: Apply **Pendimethalin 30% EC @ 1.0–1.25 L/acre** in 200L water within 48 hours of sowing under moist soil conditions.
+2. **Post-Emergence Selective Herbicides**:
+   - **In Wheat**: Deploy **Clodinafop-propargyl 15% WP @ 160g/acre** for Phalaris minor (canary grass), and **2,4-D Amine Salt 58% SL @ 400ml/acre** for broadleaf weeds at 30–35 days.
+   - **In Pulses & Soybean**: Spray **Imazethapyr 10% SL @ 300ml/acre** at 2–3 trifoliate weed stage.
+   - **In Onion & Garlic**: Spray **Oxyfluorfen 23.5% EC @ 1ml/L** at 15–20 days post-transplanting.
+3. **Inter-Row Cultivation**: Combine chemical controls with mechanical hoeing/weeding at 25–30 days.
+
+⚠️ **Important Warning:** Always use flat-fan nozzles at steady walking pace; never let non-selective herbicides drift onto the cash crop.`;
+  }
+
+  // SUGARCANE (गन्ना / Ganna)
+  if (lower.includes('sugarcane') || lower.includes('ganna') || lower.includes('kamtha') || lower.includes('red rot') || lower.includes('lal sadan')) {
+    if (isHindi) {
+      return `🌱 **सलाह: गन्ने की फसल में लाल सड़न (Red Rot), तना छेदक व कल्ले बढ़ाने का प्रबंधन**
+
+**कारण (Why?):**
+- लाल सड़न (Red Rot) गन्ने का सबसे खतरनाक फफूंद रोग है, जिससे अंदर का गूदा लाल हो जाता है और अल्कोहल जैसी गंध आती है।
+- कल्ले फूटते समय नाइट्रोजन व नमी की कमी से गन्ने की मोटाई व वजन कम रह जाता है।
+
+**क्या करें (What to do):**
+1. **बीज उपचार (अनिवार्य)**: बुवाई से पहले गन्ने के टुकड़ों को **कार्बेन्डाजिम 50% WP @ 2 ग्राम/लीटर** पानी में 15 मिनट भिगोकर ही बोएं।
+2. **कल्ले व मोटाई बढ़ाने के लिए**: बुवाई के 60-90 दिन पर **यूरिया @ 50 किग्रा + NPK 19:19:19 @ 1 किग्रा/एकड़** और मिट्टी चढ़ाने (Earthing up) के समय पोटाश डालें।
+3. **तना व चोटी छेदक सुंडी (Top/Early Shoot Borer)**: **कोराजन (Chlorantraniliprole 18.5% SC) @ 150 मिली प्रति एकड़** का 400 लीटर पानी में घोल बनाकर पौधों की जड़ों के पास ड्रेंचिंग करें।
+4. **लाल सड़न दिखने पर**: प्रभावित पौधों को जड़ समेत उखाड़कर जला दें और उस स्थान पर चूना या ब्लीचिंग पाउडर डालें।
+
+⚠️ **चेतावनी:** जिस खेत में लाल सड़न रोग का इतिहास रहा हो, वहां कम से कम 2 साल तक दोबारा गन्ना न लगाएं और रोग-प्रतिरोधी किस्में (जैसे Co 0238, Co 15023) ही चुनें।`;
+    }
+
+    return `🌱 **Recommendation: Sugarcane Agronomy: Red Rot Prevention, Shoot Borer & Tillering**
+
+**Why?**
+- Sugarcane Red Rot (Colletotrichum falcatum) infects the vascular bundle, turning the pith red with white transverse bands and destroying sucrose content.
+- Early shoot borer and internode borers arrest stalk elongation and tillering.
+
+**What to do:**
+1. **Sett Treatment (Mandatory)**: Soak setts in **Carbendazim 50% WP @ 2g/L** or **Trichoderma viride @ 5g/L** for 15 minutes prior to furrow placement.
+2. **Tillering & Stalk Girth Optimization**: Fertigate with split Nitrogen (50 kg Urea/acre) and **NPK 19:19:19 @ 1 kg/acre** followed by earthing up at 90–100 days.
+3. **Borer Control**: Drench root zones at 30–45 days with **Chlorantraniliprole 18.5% SC (Coragen) @ 150ml/acre** in 400L water.
+4. **Disease Eradication**: Rogue out and incinerate red rot infected stools; apply bleaching powder to the soil cavity.
+
+⚠️ **Important Warning:** Do not ratoon plots heavily infected with Red Rot; rotate with green manure legumes for at least one full cycle.`;
+  }
+
+  // MAIZE / CORN (मक्का / भुट्टा)
+  if (lower.includes('maize') || lower.includes('makka') || lower.includes('bhutta') || lower.includes('corn') || lower.includes('armyworm')) {
+    if (isHindi) {
+      return `🌱 **सलाह: मक्का की फसल में फॉल आर्मीवॉर्म (सैनिक सुंडी) नियंत्रण व भुट्टे का वजन बढ़ाने का उपाय**
+
+**कारण (Why?):**
+- फॉल आर्मीवॉर्म (Fall Armyworm) मक्के के पोंगे (Whorl) में छिपकर पत्तियों को जालीदार बना देती है और भुट्टे के दानों को खा जाती है।
+- मक्का एक अधिक पोषक तत्व चाहने वाली (Heavy Feeder) फसल है, जिसमें जिंक और नाइट्रोजन की कमी से पैदावार आधी रह जाती है।
+
+**क्या करें (What to do):**
+1. **फॉल आर्मीवॉर्म सुंडी नियंत्रण**:
+   - सुंडी दिखने पर तुरंत **इमामेक्टिन बेंजोएट 5% SG @ 80 ग्राम/एकड़** या **स्पाइनोटोरम 11.7% SC @ 100 मिली/एकड़** का नोजल सीधे पोंगे (गोभ) में रखकर छिड़काव करें।
+   - जैविक उपाय: बारीक रेत और सूखी राख (1:1 अनुपात) में थोड़ी सी नीम खली मिलाकर पौधों के पोंगे में चुटकी भर डालें।
+2. **उर्वरक प्रबंधन**: बुवाई के समय **जिंक सल्फेट @ 10 किग्रा/एकड़** और घुटने तक ऊंचाई (V6 अवस्था) व नर मंजरी (Tasseling) आते समय यूरिया की टॉप ड्रेसिंग करें।
+3. **भुट्टे में दाना भरने के लिए**: मंजरी व सिल्क आते समय **NPK 00:52:34 @ 1 किग्रा/एकड़** का स्प्रे करें।
+
+⚠️ **चेतावनी:** आर्मीवॉर्म की सुंडी रात में निकलती है, इसलिए स्प्रे हमेशा शाम 4 बजे के बाद ही करें ताकि दवा सीधी सुंडी पर लगे।`;
+    }
+
+    return `🌱 **Recommendation: Maize Agronomy: Fall Armyworm (FAW) Protocol & Cob Filling**
+
+**Why?**
+- Fall Armyworm (Spodoptera frugiperda) establishes deep inside the whorl funnel, producing characteristic pinholes, windowing, and fecal frass.
+- Maize is an exhaustive feeder requiring staged nitrogen and zinc to achieve full cob tip filling.
+
+**What to do:**
+1. **FAW Chemical Suppression**: Direct spray nozzle into the central whorl with **Emamectin Benzoate 5% SG @ 80g/acre** or **Chlorantraniliprole 18.5% SC @ 0.4ml/L**.
+2. **Eco-Friendly Whorl Application**: Drop a pinch of dry sieved sand mixed with dry cow dung ash (1:1) into central leaf whorls.
+3. **Nutritional Splitting**: Apply Zinc Sulfate (21%) @ 10 kg/acre basal; split Nitrogen at knee-high stage (V6) and tasseling.
+4. **Foliar Cob Booster**: Spray **NPK 00:52:34 @ 5g/L** at silking to prevent tip-blanking in cobs.
+
+⚠️ **Important Warning:** Time FAW applications in late afternoon when larvae migrate upward from leaf whorls.`;
+  }
+
+  // PULSES & LEGUMES (चना, मूंग, उड़द, अरहर, सोयाबीन / दालें)
+  if (
+    lower.includes('pulse') ||
+    lower.includes('dal') ||
+    lower.includes('chana') ||
+    lower.includes('gram') ||
+    lower.includes('moong') ||
+    lower.includes('urad') ||
+    lower.includes('arhar') ||
+    lower.includes('tur') ||
+    lower.includes('soybean') ||
+    lower.includes('soyabean') ||
+    lower.includes('masoor')
+  ) {
+    if (isHindi) {
+      return `🌱 **सलाह: दलहनी फसलों (चना, मूंग, उड़द, अरहर) में उकठा रोग, फल छेदक सुंडी व अधिक फूल-फलियां लाने के उपाय**
+
+**कारण (Why?):**
+- दलहनी फसलों की जड़ों में राइजोबियम ग्रंथियां वायुमंडलीय नाइट्रोजन स्थिर करती हैं, इसलिए इन्हें अधिक यूरिया की नहीं बल्कि फॉस्फोरस व सल्फर की जरूरत होती है।
+- फूल व फलियां बनते समय फली छेदक (Pod Borer) सुंडी दानों को खोखला कर देती है और उकठा (Wilt) रोग से पूरा पौधा सूख जाता है।
+
+**क्या करें (What to do):**
+1. **उकठा (Wilt) रोग से बचाव**: बीज को बुवाई से पहले **ट्राइकोडर्मा विरिडी @ 5 ग्राम/किग्रा बीज** या **कार्बेन्डाजिम + मेंकोजेब @ 2 ग्राम/किग्रा** से उपचारित करें।
+2. **फली छेदक सुंडी (Helicoverpa Pod Borer)**:
+   - खेत में प्रति एकड़ 4-5 फेरोमोन ट्रैप लगाएं और 'T' आकार की 15-20 खूंटियां (Bird Perches) पक्षियों के बैठने के लिए लगाएं।
+   - प्रकोप दिखने पर **क्लोरांट्रानिलीप्रोल (कोराजन) @ 0.3 मिली/लीटर** या **इमामेक्टिन बेंजोएट 5% SG @ 4 ग्राम/10 लीटर** का स्प्रे करें।
+3. **फूल व फलियां बढ़ाने के लिए**: फूल आने की अवस्था पर **चिलेटेड बोरॉन (20%) @ 1 ग्राम/लीटर** और फलियां बनते समय **NPK 00:52:34 @ 5 ग्राम/लीटर** का छिड़काव करें।
+
+⚠️ **चेतावनी:** दलहनी फसलों में कभी भी फूल खिलने के समय भारी सिंचाई न करें, इससे फूल झड़ने लगते हैं।`;
+    }
+
+    return `🌱 **Recommendation: Pulse Crop Mastery (Gram/Chickpea, Pigeonpea, Moong, Urad)**
+
+**Why?**
+- Legume root nodules fix atmospheric nitrogen; excess synthetic urea suppresses nodulation and triggers excessive vegetative growth.
+- Helicoverpa armigera pod borers perforate green pods, feeding directly on maturing seeds.
+
+**What to do:**
+1. **Wilt & Root Rot Prevention**: Treat seeds with **Trichoderma viride @ 5g/kg** or **Carboxin + Thiram @ 2g/kg seed** prior to sowing.
+2. **Pod Borer Suppression**:
+   - Erect 15–20 'T'-shaped bird perches per acre for natural predatory biocontrol.
+   - Apply **Chlorantraniliprole 18.5% SC @ 0.3ml/L** or **Flubendiamide 39.35% SC @ 0.2ml/L** at early pod emergence.
+3. **Flower Retention & Pod Set**: Spray **Chelated Boron 20% @ 1g/L** at flower initiation and follow with **NPK 00:52:34 @ 5g/L** during early grain filling.
+
+⚠️ **Important Warning:** Never flood-irrigate during peak blooming; excess moisture induces substantial flower drop.`;
+  }
+
+  // VEGETABLES (बैंगन, भिंडी, गोभी, शिमला मिर्च, ककड़ी, खीरा / सब्जियां)
+  if (
+    lower.includes('brinjal') ||
+    lower.includes('baingan') ||
+    lower.includes('bhindi') ||
+    lower.includes('okra') ||
+    lower.includes('cauliflower') ||
+    lower.includes('cabbage') ||
+    lower.includes('gobhi') ||
+    lower.includes('capsicum') ||
+    lower.includes('kheera') ||
+    lower.includes('cucumber') ||
+    lower.includes('gajar') ||
+    lower.includes('carrot') ||
+    lower.includes('mooli') ||
+    lower.includes('radish') ||
+    lower.includes('sabji') ||
+    lower.includes('vegetable')
+  ) {
+    if (isHindi) {
+      return `🌱 **सलाह: सब्जी वर्गीय फसलों में कीट नियंत्रण, पीला मोज़ेक व फल गुणवत्ता प्रबंधन**
+
+**कारण (Why?):**
+- बैंगन में तना व फल छेदक (Shoot & Fruit Borer) और भिंडी में पीला शिरा मोज़ेक वायरस (YVMV) उत्पादन को 60% तक गिरा देते हैं।
+- गोभी में डायमंड बैक मोथ (DBM) सुंडी पत्तों को छलनी कर देती है।
+
+**क्या करें (What to do):**
+1. **बैंगन में तना व फल छेदक**: मुरझाई हुई टहनियों को काटकर तुरंत नष्ट करें। **क्लोरांट्रानिलीप्रोल 18.5% SC @ 0.4 मिली/लीटर** या **इमामेक्टिन बेंजोएट @ 4 ग्राम/10 लीटर** का छिड़काव करें।
+2. **भिंडी में पीला मोज़ेक व सफेद मक्खी**: सफेद मक्खी के नियंत्रण के लिए **थियामेथोक्सम 25% WG @ 0.5 ग्राम/लीटर** का छिड़काव करें और प्रति एकड़ 10 पीले चिपचिपे कार्ड लगाएं।
+3. **गोभी में सुंडी व इल्ली (DBM)**: **स्पिनोसैड 45% SC @ 0.3 मिली/लीटर** या **नोवाल्यूरोन 10% EC @ 1.5 मिली/लीटर** का स्प्रे करें।
+4. **सब्जियों में चमक व वजन**: फल बनते समय **कैल्शियम नाइट्रेट @ 1.5 ग्राम/लीटर + बोरॉन @ 1 ग्राम/लीटर** का स्प्रे करने से सब्जी में चमक और वजन बढ़ता है।
+
+⚠️ **चेतावनी:** सब्जियों की तुड़ाई से कम से कम 5 दिन पहले रासायनिक कीटनाशक का छिड़काव बंद करें (वेटिंग पीरियड का ध्यान रखें)।`;
+    }
+
+    return `🌱 **Recommendation: High-Value Vegetable Protection & Yield Maximization**
+
+**Why?**
+- Brinjal Shoot and Fruit Borer (Leucinodes orbonalis) causes characteristic drooping shoots and unmarketable bored fruit.
+- Okra Yellow Vein Mosaic Virus (YVMV) transmitted by whiteflies creates chlorotic yellowing on entire leaf canopies.
+
+**What to do:**
+1. **Brinjal Borer Remedy**: Clip and destroy drooping terminal shoots; spray **Chlorantraniliprole 18.5% SC @ 0.4ml/L** or **Emamectin Benzoate 5% SG @ 4g/10L**.
+2. **Okra Vector & Whitefly Elimination**: Install 12 yellow sticky traps/acre and apply **Thiamethoxam 25% WG @ 0.5g/L** or **Flonicamid 50% WG @ 0.3g/L**.
+3. **Cole Crop DBM Caterpillars**: Spray **Spinosad 45% SC @ 0.3ml/L** with an agricultural sticker.
+4. **Market Glaze & Shelf Life**: Apply foliar **Calcium Nitrate (1.5g/L) + Boron 20% (1g/L)** weekly during harvest flushes.
+
+⚠️ **Important Warning:** Respect pre-harvest safety intervals (PHI) of 3–5 days prior to picking vegetables for retail sale.`;
+  }
+
+  // FRUITS & ORCHARDS (आम, अमरूद, नींबू, अनार, पपीता, संतरा / बागवानी व फल)
+  if (
+    lower.includes('mango') ||
+    lower.includes('aam') ||
+    lower.includes('lemon') ||
+    lower.includes('nimbu') ||
+    lower.includes('pomegranate') ||
+    lower.includes('anar') ||
+    lower.includes('guava') ||
+    lower.includes('amrood') ||
+    lower.includes('papaya') ||
+    lower.includes('papita') ||
+    lower.includes('banana') ||
+    lower.includes('kela') ||
+    lower.includes('orange') ||
+    lower.includes('santra') ||
+    lower.includes('bagwani') ||
+    lower.includes('orchard') ||
+    lower.includes('fruit') ||
+    lower.includes('fal')
+  ) {
+    if (isHindi) {
+      return `🌱 **सलाह: फलदार बागवानी (आम, नींबू, अनार, अमरूद) में बौर/फूल रक्षा, फल मक्खी व फटने की रोकथाम**
+
+**कारण (Why?):**
+- आम में बौर आने पर मधुआ (हॉपर) और पाउड्री मिल्ड्यू सारा रस चूस लेते हैं जिससे फूल झड़ जाते हैं।
+- नींबू में कैंकर (खुरदरे धब्बे) जीवाणु से और अनार में फल फटना (Fruit Cracking) बोरॉन व असंतुलित सिंचाई से होता है।
+
+**क्या करें (What to do):**
+1. **आम में बौर व फूल झड़ने से रोकने के लिए**:
+   - बौर निकलने पर **इमिडाक्लोप्रिड 17.8% SL @ 0.5 मिली/लीटर + हेक्साकोनाजोल 5% SC @ 1 मिली/लीटर** का पहला स्प्रे करें।
+   - फल जब मटर के दाने के बराबर हो जाएं तब **प्लानोफिक्स @ 1 मिली प्रति 4.5 लीटर पानी** में मिलाकर छिड़कें।
+2. **नींबू में सिट्रस कैंकर (खुरदरे चकत्ते)**: **कॉपर ऑक्सीक्लोराइड (COC) @ 2.5 ग्राम + स्ट्रेप्टोसाइक्लिन @ 1 ग्राम प्रति 10 लीटर पानी** में मिलाकर स्प्रे करें।
+3. **अनार/अमरूद में फल फटने से बचाव**: नियमित अंतराल पर हल्की सिंचाई करें और **बोरॉन 20% @ 1 ग्राम/लीटर + NPK 00:00:50 @ 5 ग्राम/लीटर** का स्प्रे करें।
+4. **फल मक्खी (Fruit Fly) नियंत्रण**: प्रति एकड़ 6-8 फेरोमोन मिथाइल यूजेनॉल ट्रैप लगाएं।
+
+⚠️ **चेतावनी:** आम और बागवानी में जब पूर्ण फूल (Full Bloom) खिला हो तब कोई भी कीटनाशक न छिड़कें, ताकि परागण करने वाली मधुमक्खियां न मरें।`;
+    }
+
+    return `🌱 **Recommendation: High-Yield Fruit Orchard Management (Mango, Citrus, Pomegranate, Guava)**
+
+**Why?**
+- Mango hopper pests and powdery mildew desicate inflorescences, aborting fruit set.
+- Pomegranate fruit cracking arises from sudden moisture fluctuations coupled with cellular Boron deficiency.
+
+**What to do:**
+1. **Mango Bloom & Hopper Protection**:
+   - Pre-bloom: Spray **Imidacloprid 17.8% SL @ 0.5ml/L + Hexaconazole 5% SC @ 1ml/L**.
+   - Pea-stage set: Foliar spray **Alpha NAA (Planofix) @ 1ml per 4.5L water** to curb drop.
+2. **Citrus Canker Bactericide**: Apply **Copper Oxychloride 50% WP @ 2.5g/L + Streptocycline @ 1g per 10L water**.
+3. **Pomegranate Anti-Splitting Protocol**: Maintain steady drip moisture and foliar spray **Boron 20% @ 1g/L + Potassium Sulphate (00:00:50) @ 5g/L**.
+4. **Fruit Fly Mass Trapping**: Hang 6–8 Methyl Eugenol pheromone lure traps per acre.
+
+⚠️ **Important Warning:** Completely withhold chemical insecticides during peak full-bloom to preserve honeybee pollinator activity.`;
+  }
+
+  // ORGANIC FARMING & BIO-PESTICIDES (जैविक खेती, नीमास्त्र, जीवामृत)
+  if (
+    lower.includes('jaivik') ||
+    lower.includes('organic') ||
+    lower.includes('jeevamrut') ||
+    lower.includes('neemastra') ||
+    lower.includes('dashparni') ||
+    lower.includes('brahmastra') ||
+    lower.includes('desi khad') ||
+    lower.includes('natural farming') ||
+    lower.includes('panchagavya')
+  ) {
+    if (isHindi) {
+      return `🌱 **सलाह: घर पर प्राकृतिक जैविक खाद (जीवामृत) व जैविक कीटनाशक (नीमास्त्र/दशपर्णी) बनाने की विधि**
+
+**कारण (Why?):**
+- देसी गाय के 1 ग्राम गोबर में 300 करोड़ से अधिक लाभकारी जीवाणु होते हैं जो मिट्टी की जैविक संरचना को पुनः जीवित करते हैं और खेती की लागत शून्य करते हैं।
+
+**क्या करें (What to do):**
+1. **जीवामृत बनाने की विधि (1 एकड़ के लिए)**:
+   - 200 लीटर पानी में **10 किग्रा देसी गाय का ताजा गोबर + 10 लीटर गोमूत्र + 2 किग्रा गुड़ + 2 किग्रा बेसन (चने का आटा) + मुट्ठी भर खेत की उपजाऊ मिट्टी** अच्छी तरह घोलें।
+   - 48 घंटे तक छांव में रखें और सुबह-शाम लकड़ी के डंडे से घड़ी की दिशा में घुमाएं। सिंचाई के पानी के साथ सीधे खेत में चलाएं।
+2. **नीमास्त्र (रसचूसक कीटों के लिए)**:
+   - 100 लीटर पानी में 5 लीटर गोमूत्र, 5 किग्रा गाय का गोबर और 5 किग्रा कुचली हुई नीम की पत्तियां 48 घंटे सड़ाएं। छानकर फसलों पर स्प्रे करें।
+3. **दशपर्णी अर्क (सुंडी व कड़े कीटों के लिए)**:
+   - नीम, धतूरा, मदार (आक), करंज, सीताफल, बबूल आदि 10 प्रकार के कड़वे पत्तों को गोमूत्र में 25-30 दिन सड़ाकर तैयार करें।
+4. **ट्राइकोडर्मा व स्यूडोमोनास**: 2 किग्रा ट्राइकोडर्मा को 100 किग्रा गोबर खाद में मिलाकर खेत की अंतिम जुताई पर दें।
+
+⚠️ **चेतावनी:** जीवामृत या जैविक घोल को कभी भी सीधी तेज धूप में न रखें; हमेशा पेड़ की छांव में जूट के बोरे से ढककर रखें।`;
+    }
+
+    return `🌱 **Recommendation: Natural & Zero-Budget Organic Formulations (Jeevamrut, Neemastra)**
+
+**Why?**
+- Indigenous cow dung contains trillions of beneficial soil microbes that accelerate organic matter decomposition and mineralize locked phosphates naturally.
+
+**What to do:**
+1. **Jeevamrut Preparation (Per Acre Dosage)**:
+   - In 200L water, blend **10 kg fresh indigenous cow dung + 10L cow urine + 2 kg jaggery + 2 kg chickpea flour + 1 handful undisturbed virgin soil**.
+   - Ferment in shade for 48 hours, stirring clockwise twice daily. Fertigate through flood channels or venturi drip.
+2. **Neemastra (Sucking Insect Biocide)**:
+   - Macerate 5 kg crushed neem leaves with 5L cow urine and 2 kg cow dung in 100L water; ferment for 48 hours and spray foliar.
+3. **Dashparni Ark (Broad-Spectrum Caterpillars)**:
+   - Steep leaves from 10 unpalatable bitter plants (Neem, Datura, Calotropis, Pongamia, Custard apple) in cow urine for 25 days.
+4. **Trichoderma Soil Enrichment**: Blend 2 kg Trichoderma viride into 100 kg conditioned FYM; broadcast at final tilling.
+
+⚠️ **Important Warning:** Never expose bio-ferment vessels to direct hot sunlight; keep shielded under tree canopy covered with breathable jute sack.`;
+  }
+
+  // GRAIN STORAGE & WAREHOUSE (अनाज भंडारण व घुन से सुरक्षा)
+  if (
+    lower.includes('storage') ||
+    lower.includes('bhandaran') ||
+    lower.includes('godown') ||
+    lower.includes('ghun') ||
+    lower.includes('grain preservation') ||
+    lower.includes('dhan bhandaran') ||
+    lower.includes('bori') ||
+    lower.includes('aluminium phosphide') ||
+    lower.includes('celphos')
+  ) {
+    if (isHindi) {
+      return `🌱 **सलाह: अनाज के सुरक्षित भंडारण, घुन (सूंड़ी) व सीलन से सुरक्षा की वैज्ञानिक विधि**
+
+**कारण (Why?):**
+- अनाज में 12% से अधिक नमी रहने पर फफूंद (Aflatoxin) और घुन (Weevil) का प्रकोप तेजी से होता है, जिससे अनाज खाने और बेचने लायक नहीं रहता।
+
+**क्या करें (What to do):**
+1. **धूप में सुखाना**: अनाज को भंडारण से पहले पक्के फर्श या तिरपाल पर 2-3 दिन कड़ी धूप में सुखाएं ताकि नमी 10% से नीचे आ जाए।
+2. **भंडारण स्थान की सफाई**: गोदाम या कोठिला (साइलो) की दीवारों की दरारें भरें और दीवारों पर **मैलाथियान 50% EC @ 15 मिली/लीटर** का स्प्रे करें।
+3. **देसी व जैविक उपाय**: अनाज की बोरियों में सूखी नीम की पत्तियां, माचिस की तीलियां या 1 क्विंटल अनाज में 1 किग्रा खाने वाला चूना मिलाकर रखें।
+4. **रासायनिक धूमन (Fumigation)**: अनाज की टंकी हवा-बंद (Airtight) हो तो प्रति टन अनाज में **एल्युमिनियम फॉस्फाइड (सल्फॉस) की 1 गोली** कपड़े में बांधकर बीच में रखें और टंकी तुरंत सील कर दें।
+
+⚠️ **चेतावनी:** सल्फॉस की गोली कभी भी खुली हवा में या कमरे में न रखें, इसकी गैस अत्यंत विषैली होती है। इसे केवल एयरटाइट टंकी में ही इस्तेमाल करें।`;
+    }
+
+    return `🌱 **Recommendation: Scientific Grain Storage & Post-Harvest Pest Management**
+
+**Why?**
+- Grain stored with moisture >12% generates respiration heat, incubating Aspergillus molds and devastating Rice Weevil (Sitophilus oryzae) infestations.
+
+**What to do:**
+1. **Moisture Conditioning**: Sun-dry grain on clean tarpaulins for 2–3 days until grain kernels snap crisply under tooth pressure (<10% moisture).
+2. **Granary Sanitization**: Clean cracks and spray empty bin interiors with **Malathion 50% EC @ 15ml/L** 3 days before filling.
+3. **Eco-Friendly Preservatives**: Layer dried Neem leaves (Azadirachta indica) or incorporate 1 kg food-grade inert lime per quintal grain.
+4. **Hermetic Fumigation**: In strictly airtight grain silos, place **Aluminium Phosphide (Celphos) @ 1 tablet per metric ton** wrapped in muslin cloth, then hermetically seal for 7 days.
+
+⚠️ **Important Warning:** Phosphine gas generated by Aluminium Phosphide is lethal; never employ in residential living quarters or non-airtight rooms.`;
+  }
+
+
 
   // DYNAMIC INTELLIGENT FALLBACK (Guarantees language consistency)
   return generateUniversalResponse(prompt, normLang, { soilMoisture, rainChance, crops });
