@@ -3568,8 +3568,12 @@ async function startServer() {
         next(e);
       }
     });
-  } else {
-    const distPath = path.join(process.cwd(), 'dist');
+    const candidates = [
+      path.join(process.cwd(), 'dist'),
+      path.join(process.cwd(), 'Kishan_bhai2.0', 'dist'),
+      typeof __dirname !== 'undefined' ? __dirname : '',
+    ].filter(Boolean);
+    const distPath = candidates.find((p) => fs.existsSync(path.join(p, 'index.html'))) || path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
     app.get('*all', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));

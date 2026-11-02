@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: kishan-bhai
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm run build:server
+    startCommand: npm run start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: SUPABASE_URL
+        value: https://sphasblonzgvkninmjva.supabase.co
+      - key: SUPABASE_ANON_KEY
+        value: sb_publishable_eEBFN75JQVyYkZ-8kXT5nw_PZCbgS31
+      - key: ALGORAND_NETWORK
+        value: testnet
+      - key: ALGORAND_NODE_URL
+        value: https://testnet-api.algonode.cloud
+      - key: ALGORAND_INDEXER_URL
+        value: https://testnet-idx.algonode.cloud
+      - key: ALGORAND_RECEIVER_ADDRESS
+        value: KBHAI4O4JYZ4K7V4Z2V3W5QZX3S6N6L2J7R8P9Q1S3T5U7V9W0Y2Z4A6B8
+      - key: GOPLAUSIBLE_FACILITATOR_URL
+        value: https://testnet.goplausible.xyz
