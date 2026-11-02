@@ -276,8 +276,132 @@ if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
 }
 
 /**
+ * Formats advisory text into crystal-clear, authentic Indian spoken words.
+ * Expands technical agricultural ratios, dosages, and acronyms into clear spoken language
+ * so every rural farmer can clearly understand every sentence without robotic artifacts.
+ */
+export function formatTextForIndianSpeech(text: string, langCode: string = 'hi-IN'): string {
+  let s = text;
+  const short = (langCode || 'hi-IN').toLowerCase().split('-')[0];
+
+  const transitions: Record<string, { why: string; action: string; warning: string }> = {
+    gu: {
+      why: ' આનું મુખ્ય કારણ: ',
+      action: ' તમારે આ પગલાં લેવા જોઈએ: ',
+      warning: ' ધ્યાન રાખવા જેવી જરૂરી બાબત: ',
+    },
+    pa: {
+      why: ' ਇਸਦਾ ਮੁੱਖ ਕਾਰਨ ਇਹ ਹੈ: ',
+      action: ' ਤੁਸੀਂ ਇਹ ਜ਼ਰੂਰੀ ਕਦਮ ਚੁੱਕਣੇ ਹਨ: ',
+      warning: ' ਧਿਆਨ ਰੱਖਣ ਵਾਲੀ ਖਾਸ ਗੱਲ: ',
+    },
+    mr: {
+      why: ' याचे मुख्य कारण हे आहे: ',
+      action: ' आपण पुढील उपाययोजना करावी: ',
+      warning: ' महत्त्वाची काळजी ही घ्यावी: ',
+    },
+    bn: {
+      why: ' এর মূল কারণ হলো: ',
+      action: ' আপনার করণীয় পদক্ষেপ: ',
+      warning: ' বিশেষ সতর্কবার্তা: ',
+    },
+    te: {
+      why: ' దీనికి ప్రధాన కారణం: ',
+      action: ' మీరు చేయవలసిన ముఖ్యమైన పనులు: ',
+      warning: ' ముఖ్యమైన గమనిక: ',
+    },
+    ta: {
+      why: ' இதன் முக்கிய காரணம்: ',
+      action: ' நீங்கள் செய்ய வேண்டிய வழிகள்: ',
+      warning: ' முக்கிய எச்சரிக்கை: ',
+    },
+    kn: {
+      why: ' ಇದರ ಪ್ರಮುಖ ಕಾರಣ: ',
+      action: ' ನೀವು ಕೈಗೊಳ್ಳಬೇಕಾದ ಕ್ರಮಗಳು: ',
+      warning: ' ಪ್ರಮುಖ ಎಚ್ಚರಿಕೆ: ',
+    },
+    ml: {
+      why: ' ഇതിന്റെ പ്രധാന കാരണം: ',
+      action: ' ചെയ്യേണ്ട പ്രധാന കാര്യങ്ങൾ: ',
+      warning: ' പ്രധാന മുന്നറിയിപ്പ്: ',
+    },
+    or: {
+      why: ' ଏହାର ମୁଖ୍ୟ କାରଣ: ',
+      action: ' ଆପଣଙ୍କ ପାଇଁ ପରାମର୍ଶ: ',
+      warning: ' ଜରୁରୀ ସତର୍କତା: ',
+    },
+    as: {
+      why: ' ইয়াৰ মূল কাৰণ হ’ল: ',
+      action: ' আপোনাৰ কৰণীয় পদক্ষেপ: ',
+      warning: ' গুৰুত্বপূৰ্ণ সতৰ্কবাণী: ',
+    },
+    en: {
+      why: ' Key reasons: ',
+      action: ' Recommended action steps: ',
+      warning: ' Crucial safety caution: ',
+    },
+    hi: {
+      why: ' इसका मुख्य कारण यह है: ',
+      action: ' आपको यह कदम उठाने चाहिए: ',
+      warning: ' ध्यान रखने योग्य जरूरी सावधानी यह है: ',
+    },
+  };
+
+  const t = transitions[short] || transitions.hi;
+
+  // 1. Convert Markdown headers & titles to natural conversational spoken transitions
+  s = s.replace(/🌱\s*\*{0,2}(Recommendation|सलाह|સલાહ|ਸਲਾਹ|सल्ला|পরামর্শ|సలహా|ஆலோசனை|ಸಲಹೆ|നിർദ്ദേശം|ପରାମର୍ଶ|পৰামৰ্শ)[\s:]*([^*]+)\*{0,2}/gi, '$2. ');
+  s = s.replace(/\*{0,2}(कारण\s*\(Why\?\)|Why\?|कारण|કારણ\s*\(Why\?\)|કારણ|ਕਿਉਂ\?|காரணம்|కారణం|ಏಕೆ\?|എന്തുകൊണ്ട്\?|କାରଣ|কাৰণ)[\s:]*\*{0,2}/gi, t.why);
+  s = s.replace(/\*{0,2}(क्या\s*करें\s*\(What\s*to\s*do\)|What\s*to\s*do|क्या करें|તમારે\s*શું\s*કરવું|ਤੁਸੀਂ\s*ਕੀ\s*ਕਰਨਾ|काय करावे|করণীয়|ఏం చేయాలి|என்ன செய்ய வேண்டும்|ಏನು ಮಾಡಬೇಕು|എന്തു ചെയ്യണം|କ’ଣ କରିବେ|কি কৰিব)[\s:]*\*{0,2}/gi, t.action);
+  s = s.replace(/⚠️\s*\*{0,2}(Important Warning|चेतावनी|ચેતવણી|ਚੇਤਾਵਨੀ|महत्त्वाची सूचना|সতর্কতা|ముఖ్యమైన గమనిక|எச்சரிக்கை|ಎಚ್ಚರಿಕೆ|മുന്നറിയിപ്പ്|ସତର୍କତା|সতৰ্কবাণী)[\s:]*([^*]+)\*{0,2}/gi, `${t.warning} $2`);
+
+  // 2. Expand agricultural acronyms and formulas into natural spoken Indian terms
+  s = s.replace(/\bNPK\s*19:19:19\b/gi, 'एन.पी.के. 19 19 19');
+  s = s.replace(/\bNPK\s*00:52:34\b/gi, 'एन.पी.के. 0 52 34');
+  s = s.replace(/\bNPK\s*00:00:50\b/gi, 'एन.पी.के. 0 0 50');
+  s = s.replace(/\bNPK\s*12:61:00\b/gi, 'एन.पी.के. 12 61 0');
+  s = s.replace(/\bNPK\b/gi, 'एन.पी.के.');
+  s = s.replace(/\bDAP\b/gi, 'डी.ए.पी.');
+  s = s.replace(/\bMOP\b/gi, 'एम.ओ.पी. पोटाश');
+  s = s.replace(/\bFYM\b/gi, 'सड़ी गोबर खाद');
+  s = s.replace(/\bMSP\b/gi, 'एम.एस.पी. समर्थन मूल्य');
+  s = s.replace(/\bpH\b/gi, 'पी.एच.');
+  s = s.replace(/\bBER\b/gi, 'फल का सड़ना');
+  s = s.replace(/\bCRI\b/gi, 'ताज जड़ अवस्था');
+  s = s.replace(/\bKCC\b/gi, 'किसान क्रेडिट कार्ड');
+  s = s.replace(/\bPM-KISAN\b/gi, 'पी.एम. किसान योजना');
+  s = s.replace(/\bPM-KUSUM\b/gi, 'पी.एम. कुसुम सोलर योजना');
+
+  // 3. Units & dosage replacements for natural clarity
+  s = s.replace(/@?\s*([0-9.]+)\s*(ग्राम|gram|g|gm)\s*\/\s*(लीटर|liter|l)/gi, '$1 ग्राम प्रति लीटर पानी में');
+  s = s.replace(/@?\s*([0-9.]+)\s*(मिली|ml)\s*\/\s*(लीटर|liter|l)/gi, '$1 मिली प्रति लीटर पानी में');
+  s = s.replace(/([0-9.]+)\s*(kg|किग्रा)\s*\/\s*(acre|एकड़)/gi, '$1 किलो प्रति एकड़');
+  s = s.replace(/([0-9.]+)\s*(g|ग्राम)\s*\/\s*(10\s*लीटर|10L)/gi, '$1 ग्राम प्रति 10 लीटर पानी में');
+  s = s.replace(/\b1\s*acre\b/gi, '1 एकड़');
+  s = s.replace(/\b1\s*bigha\b/gi, '1 बीघा');
+  s = s.replace(/\b1\s*hectare\b/gi, '1 हेक्टेयर');
+  s = s.replace(/\b1\s*quintal\b/gi, '1 क्विंटल');
+  s = s.replace(/\b₹\s*([0-9,]+)/g, '$1 रुपये');
+  s = s.replace(/([0-9]+)%/g, '$1 प्रतिशत');
+
+  // 4. Clean Markdown syntax, asterisks, brackets, hashes, bullet numbers
+  s = s.replace(/[*_#`~]/g, '');
+  s = s.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+  s = s.replace(/[()\[\]{}]/g, ' ');
+  s = s.replace(/^[0-9]+\.\s*/gm, '');
+  s = s.replace(/^[-•*]\s*/gm, '');
+  s = s.replace(/http\S+/g, '');
+  s = s.replace(/[🌱🌾💰🛡️⚠️✅⚡👉🎙️🤖📦📊🏷️🔗🛒💡🧪🐛💧🐄📐🌍⚖️🌿☀️🥛🦠]/g, '');
+  s = s.replace(/[,:\s]{2,}/g, ', ');
+  s = s.replace(/\s+/g, ' ').trim();
+
+  return s;
+}
+
+/**
  * Resolves the best natural speaking voice for a given Indian regional language.
- * Falls back gracefully to phonetically compatible regional or Indian English voices.
+ * Strictly prioritizes authentic Indian accents (Google हिन्दी, Microsoft Swara/Madhur/Neerja/Kalpana)
+ * and avoids robotic foreign accents so every farmer easily understands.
  */
 export function findBestVoiceForLanguage(langCode: string): SpeechSynthesisVoice | null {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) return null;
@@ -290,53 +414,89 @@ export function findBestVoiceForLanguage(langCode: string): SpeechSynthesisVoice
 
   if (!voices || voices.length === 0) return null;
 
-  const code = (langCode || 'en-IN').toLowerCase().trim().replace('_', '-');
+  const code = (langCode || 'hi-IN').toLowerCase().trim().replace('_', '-');
   const shortCode = code.split('-')[0];
 
-  // Language fallback hierarchy for Indian regional tongues
-  const fallbackPreferences: Record<string, string[]> = {
-    as: ['as-in', 'bn-in', 'bn', 'hi-in', 'en-in', 'en'], // Assamese -> Bengali/Hindi/Indian English
-    or: ['or-in', 'hi-in', 'bn-in', 'en-in', 'en'],       // Odia -> Hindi/Bengali/Indian English
-    pa: ['pa-in', 'pa', 'hi-in', 'en-in', 'en'],          // Punjabi -> Hindi/Indian English
-    gu: ['gu-in', 'gu', 'hi-in', 'en-in', 'en'],          // Gujarati -> Hindi/Indian English
-    mr: ['mr-in', 'mr', 'hi-in', 'en-in', 'en'],          // Marathi -> Hindi/Indian English
-    bn: ['bn-in', 'bn', 'hi-in', 'en-in', 'en'],          // Bengali -> Hindi/Indian English
-    te: ['te-in', 'te', 'hi-in', 'en-in', 'en'],          // Telugu -> Hindi/Indian English
-    ta: ['ta-in', 'ta', 'en-in', 'en'],                   // Tamil -> Indian English
-    kn: ['kn-in', 'kn', 'hi-in', 'en-in', 'en'],          // Kannada -> Indian English
-    ml: ['ml-in', 'ml', 'en-in', 'en'],                   // Malayalam -> Indian English
-    hi: ['hi-in', 'hi', 'en-in', 'en'],                   // Hindi -> Indian English
-    en: ['en-in', 'en-gb', 'en-us', 'en'],
+  // Identifies genuine Indian voices by locale and recognized Indian TTS identifiers
+  const isIndianVoice = (v: SpeechSynthesisVoice): boolean => {
+    const l = (v.lang || '').toLowerCase();
+    const n = (v.name || '').toLowerCase();
+    return (
+      l.includes('-in') ||
+      n.includes('india') ||
+      n.includes('hindi') ||
+      n.includes('swara') ||
+      n.includes('madhur') ||
+      n.includes('neerja') ||
+      n.includes('prabhat') ||
+      n.includes('kalpana') ||
+      n.includes('hemant') ||
+      n.includes('heera') ||
+      n.includes('ravi') ||
+      n.includes('veena') ||
+      n.includes('gujarati') ||
+      n.includes('marathi') ||
+      n.includes('punjabi') ||
+      n.includes('bengali') ||
+      n.includes('tamil') ||
+      n.includes('telugu') ||
+      n.includes('kannada') ||
+      n.includes('malayalam') ||
+      n.includes('odia')
+    );
   };
 
-  const candidates = [
-    code,
-    ...(fallbackPreferences[shortCode] || []),
+  // Top-tier high-clarity Indian voices across Microsoft, Google, Apple & Android TTS
+  const preferredIndianVoiceNames = [
+    'swara',
+    'madhur',
+    'neerja',
+    'prabhat',
+    'google हिन्दी',
+    'google gujarati',
+    'google marathi',
+    'google punjabi',
+    'google bengali',
+    'google tamil',
+    'google telugu',
+    'google kannada',
+    'google malayalam',
+    'kalpana',
+    'hemant',
+    'heera',
+    'ravi',
+    'veena',
+    'google english (india)',
     'en-in',
     'hi-in',
-    'en-us',
   ];
 
-  for (const cand of candidates) {
-    // 1. Exact match
-    const exact = voices.find((v) => v.lang.toLowerCase() === cand);
-    if (exact) return exact;
+  // 1. Exact language match that is also an authentic Indian voice
+  const exactIndian = voices.find((v) => {
+    const l = v.lang.toLowerCase();
+    return (l === code || l === `${shortCode}-in`) && isIndianVoice(v);
+  });
+  if (exactIndian) return exactIndian;
 
-    // 2. Prefix match
-    const prefix = voices.find((v) => v.lang.toLowerCase().startsWith(cand.slice(0, 2)));
-    if (prefix) return prefix;
+  // 2. Any exact voice match for this language code
+  const exact = voices.find((v) => v.lang.toLowerCase() === code || v.lang.toLowerCase() === `${shortCode}-in`);
+  if (exact) return exact;
+
+  // 3. Short code match with Indian origin
+  const prefixIndian = voices.find((v) => v.lang.toLowerCase().startsWith(shortCode) && isIndianVoice(v));
+  if (prefixIndian) return prefixIndian;
+
+  // 4. Preferred natural Indian voice names (Swara, Madhur, Neerja, Kalpana, Google हिन्दी)
+  for (const nameKeyword of preferredIndianVoiceNames) {
+    const matched = voices.find((v) => v.name.toLowerCase().includes(nameKeyword) || v.lang.toLowerCase().includes(nameKeyword));
+    if (matched) return matched;
   }
 
-  // 3. Any Indian dialect voice
-  const indianVoice = voices.find(
-    (v) =>
-      v.lang.toLowerCase().includes('-in') ||
-      v.name.toLowerCase().includes('india') ||
-      v.name.toLowerCase().includes('hindi')
-  );
-  if (indianVoice) return indianVoice;
+  // 5. Any Indian-accent voice installed in the browser
+  const anyIndian = voices.find((v) => isIndianVoice(v));
+  if (anyIndian) return anyIndian;
 
-  // 4. Default browser voice
+  // 6. Default fallback
   const defaultVoice = voices.find((v) => v.default) || voices[0];
   return defaultVoice || null;
 }
@@ -365,7 +525,9 @@ if (typeof window !== 'undefined') {
 }
 
 /**
- * Cleanly speak text using Web SpeechSynthesis API with dialect pairing and audio resilience
+ * Cleanly speak text using Web SpeechSynthesis API with dialect pairing and audio resilience.
+ * Uses calibrated authentic Indian cadence (rate: 0.90, pitch: 1.02) so speech sounds
+ * natural, pleasant, and crystal-clear to all farmers.
  */
 export function speakText(
   text: string,
@@ -390,35 +552,31 @@ export function speakText(
     // ignore
   }
 
-  // Strip Markdown markers, emojis, web URLs and brackets for clear speech output
-  const clean = text
-    .replace(/[*_#`[\]()~]/g, ' ')
-    .replace(/http\S+/g, '')
-    .replace(/[🌱🌾💰🛡️⚠️✅⚡👉🎙️🤖📦📊🏷️🔗🛒💡]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
+  let targetLang = options.lang || '';
+  if (!targetLang || targetLang === 'en' || targetLang === 'en-IN') {
+    if (/[\u0A00-\u0A7F]/.test(text)) targetLang = 'pa-IN';
+    else if (/[\u0A80-\u0AFF]/.test(text)) targetLang = 'gu-IN';
+    else if (/[\u0980-\u09FF]/.test(text)) targetLang = 'bn-IN';
+    else if (/[\u0C00-\u0C7F]/.test(text)) targetLang = 'te-IN';
+    else if (/[\u0B80-\u0BFF]/.test(text)) targetLang = 'ta-IN';
+    else if (/[\u0C80-\u0CFF]/.test(text)) targetLang = 'kn-IN';
+    else if (/[\u0D00-\u0D7F]/.test(text)) targetLang = 'ml-IN';
+    else if (/[\u0B00-\u0B7F]/.test(text)) targetLang = 'or-IN';
+    else if (/[\u0900-\u097F]/.test(text)) targetLang = 'hi-IN';
+    else targetLang = 'en-IN';
+  }
 
-  if (!clean) {
+  // Pre-process raw advisory text into natural, easy-to-understand spoken Indian phrasing
+  const spokenText = formatTextForIndianSpeech(text, targetLang);
+
+  if (!spokenText) {
     options.onEnd?.();
     return null;
   }
 
-  const utterance = new SpeechSynthesisUtterance(clean);
-  let targetLang = options.lang || '';
-  if (!targetLang || targetLang === 'en' || targetLang === 'en-IN') {
-    if (/[\u0A00-\u0A7F]/.test(clean)) targetLang = 'pa-IN';
-    else if (/[\u0A80-\u0AFF]/.test(clean)) targetLang = 'gu-IN';
-    else if (/[\u0980-\u09FF]/.test(clean)) targetLang = 'bn-IN';
-    else if (/[\u0C00-\u0C7F]/.test(clean)) targetLang = 'te-IN';
-    else if (/[\u0B80-\u0BFF]/.test(clean)) targetLang = 'ta-IN';
-    else if (/[\u0C80-\u0CFF]/.test(clean)) targetLang = 'kn-IN';
-    else if (/[\u0D00-\u0D7F]/.test(clean)) targetLang = 'ml-IN';
-    else if (/[\u0B00-\u0B7F]/.test(clean)) targetLang = 'or-IN';
-    else if (/[\u0900-\u097F]/.test(clean)) targetLang = 'hi-IN';
-    else targetLang = 'en-IN';
-  }
+  const utterance = new SpeechSynthesisUtterance(spokenText);
 
-  // Pair with best matching voice installed on user's system
+  // Pair with best authentic Indian voice
   const matchedVoice = findBestVoiceForLanguage(targetLang);
   if (matchedVoice) {
     utterance.voice = matchedVoice;
@@ -427,8 +585,9 @@ export function speakText(
     utterance.lang = targetLang.includes('-') ? targetLang : `${targetLang}-IN`;
   }
 
-  utterance.rate = options.rate ?? 0.95;
-  utterance.pitch = options.pitch ?? 1.0;
+  // Authentic, pleasant, calm Indian pacing (0.90 rate) so every word is distinct & clear
+  utterance.rate = options.rate ?? 0.90;
+  utterance.pitch = options.pitch ?? 1.02;
   utterance.volume = options.volume ?? 1.0;
 
   const cleanup = () => {

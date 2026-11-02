@@ -59,7 +59,7 @@ export const HandsFreeAssistantModal: React.FC<HandsFreeAssistantModalProps> = (
     }
   }, [language]);
   const [autoSpeakAnswer, setAutoSpeakAnswer] = useState(true);
-  const [speechRate, setSpeechRate] = useState(1.0);
+  const [speechRate, setSpeechRate] = useState(0.90);
   const [conversationState, setConversationState] = useState<
     'idle' | 'listening' | 'thinking' | 'speaking'
   >('listening');
@@ -287,9 +287,10 @@ export const HandsFreeAssistantModal: React.FC<HandsFreeAssistantModalProps> = (
               onChange={(e) => setSpeechRate(parseFloat(e.target.value))}
               className="bg-stone-800 border border-white/15 rounded-xl px-2 py-1 text-[11px] text-stone-300 cursor-pointer"
             >
-              <option value="0.85">0.85x Speed</option>
-              <option value="1.0">1.0x Normal</option>
-              <option value="1.15">1.15x Fast</option>
+              <option value="0.80">0.8x धीमा (Slow)</option>
+              <option value="0.90">0.9x सहज स्पष्ट (Recommended)</option>
+              <option value="1.0">1.0x सामान्य (Normal)</option>
+              <option value="1.15">1.15x तेज (Fast)</option>
             </select>
           </div>
         </div>

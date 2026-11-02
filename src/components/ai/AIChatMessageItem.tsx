@@ -65,7 +65,8 @@ export const AIChatMessageItem: React.FC<Props> = ({
 
     speakText(message.content, {
       lang: targetLang,
-      rate: 0.95,
+      rate: 0.90,
+      pitch: 1.02,
       onStart: () => setIsSpeaking(true),
       onEnd: () => setIsSpeaking(false),
       onError: () => setIsSpeaking(false),
